@@ -39,10 +39,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/cf/workspace/ri/code
+CMAKE_SOURCE_DIR = /home/cf/workspace/ri/tp
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/cf/workspace/ri/code/build
+CMAKE_BINARY_DIR = /home/cf/workspace/ri/tp
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -69,14 +69,14 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	cd /home/cf/workspace/ri/code/build && $(CMAKE_COMMAND) -E cmake_progress_start /home/cf/workspace/ri/code/build/CMakeFiles /home/cf/workspace/ri/code/build/src/CMakeFiles/progress.marks
-	cd /home/cf/workspace/ri/code/build && $(MAKE) -f CMakeFiles/Makefile2 src/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/cf/workspace/ri/code/build/CMakeFiles 0
+	cd /home/cf/workspace/ri/tp && $(CMAKE_COMMAND) -E cmake_progress_start /home/cf/workspace/ri/tp/CMakeFiles /home/cf/workspace/ri/tp/RICPlib/src/CMakeFiles/progress.marks
+	cd /home/cf/workspace/ri/tp && $(MAKE) -f CMakeFiles/Makefile2 RICPlib/src/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/cf/workspace/ri/tp/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd /home/cf/workspace/ri/code/build && $(MAKE) -f CMakeFiles/Makefile2 src/clean
+	cd /home/cf/workspace/ri/tp && $(MAKE) -f CMakeFiles/Makefile2 RICPlib/src/clean
 .PHONY : clean
 
 # The main clean target
@@ -85,76 +85,76 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd /home/cf/workspace/ri/code/build && $(MAKE) -f CMakeFiles/Makefile2 src/preinstall
+	cd /home/cf/workspace/ri/tp && $(MAKE) -f CMakeFiles/Makefile2 RICPlib/src/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd /home/cf/workspace/ri/code/build && $(MAKE) -f CMakeFiles/Makefile2 src/preinstall
+	cd /home/cf/workspace/ri/tp && $(MAKE) -f CMakeFiles/Makefile2 RICPlib/src/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	cd /home/cf/workspace/ri/code/build && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /home/cf/workspace/ri/tp && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
 # Convenience name for target.
-src/CMakeFiles/RICPlib.dir/rule:
-	cd /home/cf/workspace/ri/code/build && $(MAKE) -f CMakeFiles/Makefile2 src/CMakeFiles/RICPlib.dir/rule
-.PHONY : src/CMakeFiles/RICPlib.dir/rule
+RICPlib/src/CMakeFiles/RICPlib.dir/rule:
+	cd /home/cf/workspace/ri/tp && $(MAKE) -f CMakeFiles/Makefile2 RICPlib/src/CMakeFiles/RICPlib.dir/rule
+.PHONY : RICPlib/src/CMakeFiles/RICPlib.dir/rule
 
 # Convenience name for target.
-RICPlib: src/CMakeFiles/RICPlib.dir/rule
+RICPlib: RICPlib/src/CMakeFiles/RICPlib.dir/rule
 .PHONY : RICPlib
 
 # fast build rule for target.
 RICPlib/fast:
-	cd /home/cf/workspace/ri/code/build && $(MAKE) -f src/CMakeFiles/RICPlib.dir/build.make src/CMakeFiles/RICPlib.dir/build
+	cd /home/cf/workspace/ri/tp && $(MAKE) -f RICPlib/src/CMakeFiles/RICPlib.dir/build.make RICPlib/src/CMakeFiles/RICPlib.dir/build
 .PHONY : RICPlib/fast
 
 # target to build an object file
 CollectionReader.o:
-	cd /home/cf/workspace/ri/code/build && $(MAKE) -f src/CMakeFiles/RICPlib.dir/build.make src/CMakeFiles/RICPlib.dir/CollectionReader.o
+	cd /home/cf/workspace/ri/tp && $(MAKE) -f RICPlib/src/CMakeFiles/RICPlib.dir/build.make RICPlib/src/CMakeFiles/RICPlib.dir/CollectionReader.o
 .PHONY : CollectionReader.o
 
 # target to preprocess a source file
 CollectionReader.i:
-	cd /home/cf/workspace/ri/code/build && $(MAKE) -f src/CMakeFiles/RICPlib.dir/build.make src/CMakeFiles/RICPlib.dir/CollectionReader.i
+	cd /home/cf/workspace/ri/tp && $(MAKE) -f RICPlib/src/CMakeFiles/RICPlib.dir/build.make RICPlib/src/CMakeFiles/RICPlib.dir/CollectionReader.i
 .PHONY : CollectionReader.i
 
 # target to generate assembly for a file
 CollectionReader.s:
-	cd /home/cf/workspace/ri/code/build && $(MAKE) -f src/CMakeFiles/RICPlib.dir/build.make src/CMakeFiles/RICPlib.dir/CollectionReader.s
+	cd /home/cf/workspace/ri/tp && $(MAKE) -f RICPlib/src/CMakeFiles/RICPlib.dir/build.make RICPlib/src/CMakeFiles/RICPlib.dir/CollectionReader.s
 .PHONY : CollectionReader.s
 
 # target to build an object file
 CollectionWriter.o:
-	cd /home/cf/workspace/ri/code/build && $(MAKE) -f src/CMakeFiles/RICPlib.dir/build.make src/CMakeFiles/RICPlib.dir/CollectionWriter.o
+	cd /home/cf/workspace/ri/tp && $(MAKE) -f RICPlib/src/CMakeFiles/RICPlib.dir/build.make RICPlib/src/CMakeFiles/RICPlib.dir/CollectionWriter.o
 .PHONY : CollectionWriter.o
 
 # target to preprocess a source file
 CollectionWriter.i:
-	cd /home/cf/workspace/ri/code/build && $(MAKE) -f src/CMakeFiles/RICPlib.dir/build.make src/CMakeFiles/RICPlib.dir/CollectionWriter.i
+	cd /home/cf/workspace/ri/tp && $(MAKE) -f RICPlib/src/CMakeFiles/RICPlib.dir/build.make RICPlib/src/CMakeFiles/RICPlib.dir/CollectionWriter.i
 .PHONY : CollectionWriter.i
 
 # target to generate assembly for a file
 CollectionWriter.s:
-	cd /home/cf/workspace/ri/code/build && $(MAKE) -f src/CMakeFiles/RICPlib.dir/build.make src/CMakeFiles/RICPlib.dir/CollectionWriter.s
+	cd /home/cf/workspace/ri/tp && $(MAKE) -f RICPlib/src/CMakeFiles/RICPlib.dir/build.make RICPlib/src/CMakeFiles/RICPlib.dir/CollectionWriter.s
 .PHONY : CollectionWriter.s
 
 # target to build an object file
 Document.o:
-	cd /home/cf/workspace/ri/code/build && $(MAKE) -f src/CMakeFiles/RICPlib.dir/build.make src/CMakeFiles/RICPlib.dir/Document.o
+	cd /home/cf/workspace/ri/tp && $(MAKE) -f RICPlib/src/CMakeFiles/RICPlib.dir/build.make RICPlib/src/CMakeFiles/RICPlib.dir/Document.o
 .PHONY : Document.o
 
 # target to preprocess a source file
 Document.i:
-	cd /home/cf/workspace/ri/code/build && $(MAKE) -f src/CMakeFiles/RICPlib.dir/build.make src/CMakeFiles/RICPlib.dir/Document.i
+	cd /home/cf/workspace/ri/tp && $(MAKE) -f RICPlib/src/CMakeFiles/RICPlib.dir/build.make RICPlib/src/CMakeFiles/RICPlib.dir/Document.i
 .PHONY : Document.i
 
 # target to generate assembly for a file
 Document.s:
-	cd /home/cf/workspace/ri/code/build && $(MAKE) -f src/CMakeFiles/RICPlib.dir/build.make src/CMakeFiles/RICPlib.dir/Document.s
+	cd /home/cf/workspace/ri/tp && $(MAKE) -f RICPlib/src/CMakeFiles/RICPlib.dir/build.make RICPlib/src/CMakeFiles/RICPlib.dir/Document.s
 .PHONY : Document.s
 
 # Help Target
@@ -186,6 +186,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	cd /home/cf/workspace/ri/code/build && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /home/cf/workspace/ri/tp && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 

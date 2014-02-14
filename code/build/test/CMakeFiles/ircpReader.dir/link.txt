@@ -1,1 +1,0 @@
-/usr/bin/c++   -Wall -Werror    CMakeFiles/ircpReader.dir/testReader.o  -o ircpReader  -L/home/cf/workspace/ri/code/build/src -rdynamic ../src/libRICPlib.a -lz 

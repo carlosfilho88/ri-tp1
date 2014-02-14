@@ -1,3 +1,0 @@
-/home/cf/workspace/ri/code/build/src/CMakeFiles/RICPlib.dir
-/home/cf/workspace/ri/code/build/test/CMakeFiles/ircpReader.dir
-/home/cf/workspace/ri/code/build/test/CMakeFiles/ircpWriter.dir
