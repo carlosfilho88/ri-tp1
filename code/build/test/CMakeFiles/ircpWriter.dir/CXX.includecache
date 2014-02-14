@@ -1,0 +1,36 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../src/CollectionWriter.h
+envDefault.h
+../src/envDefault.h
+Document.h
+../src/Document.h
+stdint.h
+-
+cstdio
+-
+cstdlib
+-
+
+../src/Document.h
+string
+-
+
+../src/envDefault.h
+zlib.h
+../src/zlib.h
+
+/home/cf/workspace/ri/code/test/testWriter.cpp
+CollectionWriter.h
+/home/cf/workspace/ri/code/test/CollectionWriter.h
+cstdlib
+-
+iostream
+-
+
