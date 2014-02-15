@@ -4,7 +4,7 @@ ri-tp1
 Trabalho Prático I: Recuperação de Informação - Máquinas de Busca na Web
 
 ## Prerequisites
-You must have installed the following libraries:
+You must have installed the following libraries (apt options are avaliable):
 
 - [zlib](http://www.zlib.net/)
   * zlib1g zlib1g-dev
