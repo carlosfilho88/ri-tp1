@@ -12,7 +12,15 @@ You must have installed the following libraries (apt options are avaliable):
   * libhtmlcxx3 libhtmlcxx-dev
 
 ## How to compile code
-- cd tp/
-- mkdir -p build && cd build/
-- cmake ..
-- make
+```bash
+cd tp/
+mkdir -p build && cd build/
+cmake ..
+make
+```
+
+## Running an example
+```bash
+cd build/src/
+./indexer ../../files/ indexToCompressedColection.txt
+```
