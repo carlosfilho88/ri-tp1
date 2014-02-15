@@ -2,6 +2,7 @@ ri-tp1
 ======
 
 Trabalho Prático I: Recuperação de Informação - Máquinas de Busca na Web
+*Practical Work I: Information Retrieval - Web Search Machines*
 
 ## Prerequisites
 You must have installed the following libraries (apt options are avaliable):
