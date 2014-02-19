@@ -10,7 +10,7 @@ You must have installed the following libraries:
 
 - [zlib](http://www.zlib.net/)
   * zlib1g zlib1g-dev (via apt repository)
-- [htmlcxx](https://github.com/dhoerl/htmlcxx)
+- [htmlcxx](https://github.com/dhoerl/htmlcxx) (built-in)
 
 ## How to compile code
 ```bash
