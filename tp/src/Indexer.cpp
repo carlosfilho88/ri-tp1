@@ -8,9 +8,7 @@
 #include <CollectionReader.h>
 #include <CharsetConverter.h>
 #include "gumbo.h"
-#include <iostream>
-#include <string>
-#include <time.h>
+#include <ctime>
 #include <vector>
 
 using namespace std;
@@ -286,20 +284,18 @@ int main(int argc, char** argv) {
     output = gumbo_parse(contents.c_str());
     /*title = find_title(output->root);*/
     //printf("%s\n", title);
-    //cout << contents << endl;
     contents = desaxUTF8(cleantext((GumboNode*)output->root));
-    //app_utf8_is_ascii(contents.c_str(), contents.size());
-    //cout << contents << endl;
+    gumbo_destroy_output(&kGumboDefaultOptions, output);
     voc = word(contents);
-    //for(vector<string>::const_iterator i = voc.begin(); i != voc.end(); ++i)
-    //  cout << *i << ", ";
+    cout << contents << endl;
+    for(vector<string>::const_iterator i = voc.begin(); i != voc.end(); ++i)
+      cout << *i << ", ";
 
     doc.clear();
     num_docs++;
     cin >> ch;
   }
   tstop = (double)clock()/CLOCKS_PER_SEC;
-  ttime = tstop-tstart; /*ttime is how long your code run */
+  ttime = tstop-tstart;
   cout << num_docs << " document(s) in " << ttime << " second(s)." << endl;
-  gumbo_destroy_output(&kGumboDefaultOptions, output);
 }

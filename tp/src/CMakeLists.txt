@@ -1,4 +1,4 @@
-INCLUDE_DIRECTORIES(${TP_SOURCE_DIR}/RICP/src)
+INCLUDE_DIRECTORIES(${TP_SOURCE_DIR}/ricp/src)
 INCLUDE_DIRECTORIES(${TP_SOURCE_DIR}/htmlcxx)
 LINK_DIRECTORIES(/usr/local/lib)
 
@@ -12,6 +12,4 @@ AUX_SOURCE_DIRECTORY(index INDEX)
 ADD_LIBRARY(TP ${INDEX})
 
 ADD_EXECUTABLE(run Indexer.cpp)
-# TARGET_LINK_LIBRARIES(run TP gumbo RICP z icudata icui18n icuio icule iculx icutu icuuc)
-# TARGET_LINK_LIBRARIES(run TP gumbo RICP z icui18n icuio icuuc)
-TARGET_LINK_LIBRARIES(run TP gumbo ${ICU_LIBRARIES} htmlcxx RICP z)
+TARGET_LINK_LIBRARIES(run TP gumbo ${ICU_LIBRARIES} htmlcxx ricp z)
