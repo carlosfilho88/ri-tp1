@@ -8,6 +8,10 @@
 #include <CollectionReader.h>
 #include <CharsetConverter.h>
 #include "gumbo.h"
+#include <iostream>
+#include <string>
+#include <time.h>
+#include <vector>
 
 using namespace std;
 using namespace RICPNS;
@@ -35,49 +39,6 @@ using namespace RICPNS;
   if (*source > 0xF4)
     return false;
   return true;
-}
-
-string tokenizer({)
-  string token;
-
-  for(; currentChar < text.size(); currentChar++){
-
-    char ch = text[currentChar];
-    if( isAlphaNum(ch) || isSpecialChar(ch)){
-      tokenStart = currentChar;
-      do {
-        currentChar++;
-        ch = text[currentChar];
-      } while( isAlphaNum(ch) || isSpecialChar(ch) );
-
-      token = text.substr(tokenStart, currentChar-tokenStart);
-            removeAccents(token);
-            if(stopfile.isStopword(token))
-        continue;
-      else
-        break;
-    }
-
-  }
-  return token;
-}
-
-vector<string> tokenizar(string s){
-  string::iterator it = s.begin();
-  vector<string> v;
-
-  string palavra = "";
-
-  while(it!=s.end()) {
-    if (*it == ' ' || ehPontuacao(*it)) {
-      if (palavra.size() > 0) v.push_back(palavra);
-        palavra = "";
-      } else { 
-        palavra += *it;
-      }
-    it++;
-  }
-  return v;
 }
 */
 string normalize(string str) {
@@ -119,6 +80,38 @@ string normalize(string str) {
 #include <unicode/brkiter.h>
 #include "utf8.h"
 
+#include <iostream>
+#include <string>
+
+string trim(const string& str, const string& whitespace = " \t") {
+  const auto strBegin = str.find_first_not_of(whitespace);
+  if (strBegin == string::npos)
+    return ""; // no content
+
+  const auto strEnd = str.find_last_not_of(whitespace);
+  const auto strRange = strEnd - strBegin + 1;
+
+  return str.substr(strBegin, strRange);
+}
+
+string reduce(const string& str, const string& fill = " ", const string& whitespace = " \t") {
+  // trim first
+  auto result = trim(str, whitespace);
+
+  // replace sub ranges
+  auto beginSpace = result.find_first_of(whitespace);
+  while (beginSpace != string::npos) {
+    const auto endSpace = result.find_first_not_of(whitespace, beginSpace);
+    const auto range = endSpace - beginSpace;
+
+    result.replace(beginSpace, range, fill);
+
+    const auto newStart = beginSpace + fill.length();
+    beginSpace = result.find_first_of(whitespace, newStart);
+  }
+
+  return result;
+}
 
 char *latin9_to_utf8(const char *const string) {
   char *result;
@@ -207,17 +200,18 @@ void extractWords(const string& str) {
   }
 }
 
-string word(string& str) {
+vector<string> word(string& str) {
+  vector<string> voc;
   char * dup = strdup(str.c_str());
-  char * pch;
-  cout << str << endl;
-  pch = strtok(dup," ,.!?():\"'@#$&*;|\\^~}{[]<>¹²³³£¢¬+_-=/");
-  while (pch != NULL) {
-    printf ("%s\n", pch);
-    pch = strtok(NULL, " ,.!?():\"'@#$&*;|\\^~}{[]<>¹²³³£¢¬+_-=/");
+  char * word;
+  //cout << str << endl;
+  word = strtok(dup," ,.!?():\"'@#$&*;|\\^~}{[]<>¹²³³£¢¬+_-=/\r\b\t\n");
+  while (word != NULL) {
+    voc.push_back(word);
+    word = strtok(NULL, " ,.!?():\"'@#$&*;|\\^~}{[]<>¹²³³£¢¬+_-=/\r\b\t\n");
   }
   free(dup);
-  return "--end of words--";
+  return voc;
 }
 
 static string cleantext(GumboNode* node) {
@@ -235,7 +229,7 @@ static string cleantext(GumboNode* node) {
       if (i != 0 && !text.empty()) {
         contents.append(" ");
       }
-      contents.append(text);
+      contents.append(reduce(text));
     }
     return contents;
   } else {
@@ -280,7 +274,12 @@ int main(int argc, char** argv) {
   GumboOutput* output;
   doc.clear();
   char ch;
-  while (cr.getNextDocument(doc)) {
+  unsigned long num_docs = 0;
+  vector<string> voc;
+
+  double tstart, tstop, ttime;
+  tstart = (double)clock()/CLOCKS_PER_SEC;
+  while (cr.getNextDocument(doc) && num_docs < 100) {
     contents = doc.getText();
     size_t begin = contents.find('<');
     contents = begin == contents.npos ? "" : contents.substr(begin, contents.size());
@@ -290,11 +289,17 @@ int main(int argc, char** argv) {
     //cout << contents << endl;
     contents = desaxUTF8(cleantext((GumboNode*)output->root));
     //app_utf8_is_ascii(contents.c_str(), contents.size());
-    cout << contents << endl;
+    //cout << contents << endl;
+    voc = word(contents);
+    //for(vector<string>::const_iterator i = voc.begin(); i != voc.end(); ++i)
+    //  cout << *i << ", ";
 
-    word(contents);
     doc.clear();
+    num_docs++;
     cin >> ch;
   }
+  tstop = (double)clock()/CLOCKS_PER_SEC;
+  ttime = tstop-tstart; /*ttime is how long your code run */
+  cout << num_docs << " document(s) in " << ttime << " second(s)." << endl;
   gumbo_destroy_output(&kGumboDefaultOptions, output);
 }
