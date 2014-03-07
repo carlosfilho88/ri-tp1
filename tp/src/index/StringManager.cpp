@@ -28,7 +28,7 @@ void printTextRange( BreakIterator& iterator,
 }
 
 
-/* Print each element in order: */
+//Print each element in order:
 void printEachForward( BreakIterator& boundary)
 {
     int32_t start = boundary.first();
@@ -40,7 +40,7 @@ void printEachForward( BreakIterator& boundary)
     }
 }
 
-/* Creating and using text boundaries */
+//Creating and using text boundaries 
 int main( void )
 {
     BreakIterator* boundary;

@@ -10,6 +10,9 @@ You must have installed the following libraries:
 
 - [zlib](http://www.zlib.net/)
   * zlib1g zlib1g-dev (via apt repository)
+- [icu4c](http://site.icu-project.org/download)
+  * libicu-dev libicu48-dbg (via apt repository)
+- [gumbo-parser](https://github.com/google/gumbo-parser) (built-in)
 - [htmlcxx](https://github.com/dhoerl/htmlcxx) (built-in)
 
 ## How to compile code
@@ -17,11 +20,11 @@ You must have installed the following libraries:
 cd tp/
 mkdir -p build && cd build/
 cmake ..
-make
+cd src/ && make
 ```
 
 ## Running an example
 ```bash
 cd build/src/
-./indexer ../../files/ indexToCompressedColection.txt
+./run ../../files/ indexToCompressedColection.txt
 ```
