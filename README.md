@@ -13,6 +13,7 @@ You must have installed the following libraries:
 - [icu4c](http://site.icu-project.org/download)
   * libicu-dev libicu48-dbg (via apt repository)
 - [gumbo-parser](https://github.com/google/gumbo-parser) (built-in)
+  * libtool automake (via apt repository)
 - [htmlcxx](https://github.com/dhoerl/htmlcxx) (built-in)
 
 ## How to compile code
