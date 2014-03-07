@@ -16,7 +16,7 @@ You must have installed the following libraries:
   * libtool automake (via apt repository)
 - [htmlcxx](https://github.com/dhoerl/htmlcxx) (built-in)
 
-## How to compile code
+## How to compile this code
 ```bash
 cd tp/
 mkdir -p build && cd build/

@@ -205,7 +205,6 @@ void extractWords(const string& str) {
     text.extractBetween(start, end, word);
     cout << word.toUTF8String(result) << endl;
   }
-
 }
 
 string word(string& str) {
