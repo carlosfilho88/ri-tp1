@@ -211,10 +211,10 @@ string word(string& str) {
   char * dup = strdup(str.c_str());
   char * pch;
   cout << str << endl;
-  pch = strtok(dup," ,.-");
+  pch = strtok(dup," ,.!?():\"'@#$&*;|\\^~}{[]<>¹²³³£¢¬+_-=/");
   while (pch != NULL) {
     printf ("%s\n", pch);
-    pch = strtok(NULL, " ,.-");
+    pch = strtok(NULL, " ,.!?():\"'@#$&*;|\\^~}{[]<>¹²³³£¢¬+_-=/");
   }
   free(dup);
   return "--end of words--";
@@ -288,11 +288,11 @@ int main(int argc, char** argv) {
     /*title = find_title(output->root);*/
     //printf("%s\n", title);
     //cout << contents << endl;
-    contents = latin9_to_utf8(cleantext((GumboNode*)output->root).c_str());
+    contents = desaxUTF8(cleantext((GumboNode*)output->root));
     //app_utf8_is_ascii(contents.c_str(), contents.size());
-    //cout << contents << endl;
+    cout << contents << endl;
 
-    //word(contents);
+    word(contents);
     doc.clear();
     cin >> ch;
   }
