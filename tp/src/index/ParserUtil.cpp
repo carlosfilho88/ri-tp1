@@ -1,9 +1,9 @@
 #include "StringUtil.h"
 #include "ParserUtil.h"
 
-void extractWords(const string& str) {
+void extract_words(const string& str) {
   string result;
-  UnicodeString text = UnicodeString::fromUTF8(StringPiece("Cursos a distância de fotografia, estúdio fotográfico, serigrafia ou silk screen, representante comercial, bijuterias, operador de telemarketing, básico de informática, programador, lógica de programação, excel, digitação, almoxarife, comprador, eletricidade, telemensagens, recarga de cartuchos etc"));
+  UnicodeString text = UnicodeString::fromUTF8(StringPiece(str));
   UnicodeString word;
   UErrorCode status = U_ZERO_ERROR;
   BreakIterator* wordIterator = BreakIterator::createSentenceInstance(Locale::getUS(), status);
@@ -13,13 +13,18 @@ void extractWords(const string& str) {
 
   for(int32_t end = wordIterator->next(); end != BreakIterator::DONE; start = end, end = wordIterator->next()) {
     text.extractBetween(start, end, word);
-    cout << word.toUTF8String(result) << endl;
+    char charBuf[(end - start) + 1];
+    word.extract(0, word.length(), charBuf, sizeof(charBuf)-1, 0);   
+    charBuf[sizeof(charBuf)-1] = 0;          
+    printf("%s\n", charBuf);
+    //cout << word.toUTF8String(word) << endl;
   }
+  delete wordIterator;
 }
 
-string desaxUTF8(const string& str) {
+string normalize_text(const string& str) {
   string result;
- 
+
   UnicodeString source = UnicodeString::fromUTF8(StringPiece(str));
   UErrorCode status = U_ZERO_ERROR;
   Transliterator *accentsConverter = Transliterator::createInstance("Lower; NFD; Latin-ASCII; [\u0301] remove; NFC;", UTRANS_FORWARD, status);
@@ -29,7 +34,7 @@ string desaxUTF8(const string& str) {
   return result;
 }
 
-string cleantext(GumboNode* node) {
+string extract_text_html(GumboNode* node) {
   if (node->type == GUMBO_NODE_TEXT) {
     return string(node->v.text.text);
   } else if (node->type == GUMBO_NODE_ELEMENT && 
@@ -40,13 +45,15 @@ string cleantext(GumboNode* node) {
     string contents = "";
     GumboVector* children = &node->v.element.children;
     for (int i = 0; i < children->length; ++i) {
-      const string text = cleantext((GumboNode*) children->data[i]);
+      const string text = extract_text_html((GumboNode*) children->data[i]);
       if (i != 0 && !text.empty()) {
         contents.append(" ");
       }
-      contents.append(reduce(text));
+      contents.append(text);
     }
-    return contents;
+    contents = trim(contents, "\n\r\b\t");
+    contents = reduce(contents, "","\n\r\b\t");
+    return reduce(contents);
   } else {
     return ""; 
   }
@@ -82,16 +89,15 @@ const char* find_title(const GumboNode* root) {
   return "<no title found>";
 }
 
-vector<string> word(string& str) {
-  vector<string> voc;
+vector<string> find_terms(string& str) {
+  vector<string> terms;
   char * dup = strdup(str.c_str());
   char * word;
-  //cout << str << endl;
   word = strtok(dup," ,.!?():\"'@#$&*;|\\^~}{[]<>¹²³³£¢¬+_-=/\r\b\t\n");
   while (word != NULL) {
-    voc.push_back(word);
+    terms.push_back(word);
     word = strtok(NULL, " ,.!?():\"'@#$&*;|\\^~}{[]<>¹²³³£¢¬+_-=/\r\b\t\n");
   }
   free(dup);
-  return voc;
+  return terms;
 }

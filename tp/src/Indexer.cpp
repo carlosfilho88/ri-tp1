@@ -18,7 +18,7 @@ int main(int argc, char** argv) {
   doc.clear();
   char ch;
   unsigned long num_docs = 0;
-  vector<string> voc;
+  vector<string> terms;
 
   double tstart, tstop, ttime;
   tstart = (double)clock()/CLOCKS_PER_SEC;
@@ -27,13 +27,12 @@ int main(int argc, char** argv) {
     begin = contents.find('<');
     contents = begin == contents.npos ? "" : contents.substr(begin, contents.size());
     output = gumbo_parse(contents.c_str());
-    /*title = find_title(output->root);
-    printf("%s\n", title);*/
-    contents = desaxUTF8(cleantext((GumboNode*)output->root));
+    contents = normalize_text(extract_text_html((GumboNode*)output->root));
     gumbo_destroy_output(&kGumboDefaultOptions, output);
-    voc = word(contents);
     cout << contents << endl;
-    //for(vector<string>::const_iterator i = voc.begin(); i != voc.end(); ++i)
+    terms = find_terms(contents);
+    //voc = word(contents);
+    //for(vector<string>::const_iterator i = terms.begin(); i != terms.end(); ++i)
     //  cout << *i << ", ";
 
     doc.clear();
