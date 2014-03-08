@@ -1,7 +1,36 @@
 #include "StringUtil.h"
 #include "ParserUtil.h"
 
-void extract_words(const string& str) {
+ParserUtil::ParserUtil() {
+}
+
+void ParserUtil::read_collection(char** argv) {
+  CollectionReader* cr = new CollectionReader(argv[1], argv[2]);
+  Document doc;
+  GumboOutput* output;
+  size_t begin;
+  unsigned long num_docs = 0;
+  doc.clear();
+  char ch;
+
+  while (cr->getNextDocument(doc) && num_docs < 100) {
+    content = doc.getText();
+    begin = content.find('<');
+    content = begin == content.npos ? "" : content.substr(begin, content.size());
+    output = gumbo_parse(content.c_str());
+    content = normalize_text(extract_text_html((GumboNode*)output->root));
+    gumbo_destroy_output(&kGumboDefaultOptions, output);
+    find_terms(content);
+    for(vector<string>::const_iterator i = terms.begin(); i != terms.end(); ++i)
+      cout << *i << "\n";
+
+    doc.clear();
+    num_docs++;
+    cin >> ch;
+  }
+}
+
+void ParserUtil::extract_words(const string& str) {
   string result;
   UnicodeString text = UnicodeString::fromUTF8(StringPiece(str));
   UnicodeString word;
@@ -22,7 +51,7 @@ void extract_words(const string& str) {
   delete wordIterator;
 }
 
-string normalize_text(const string& str) {
+string ParserUtil::normalize_text(const string& str) {
   string result;
 
   UnicodeString source = UnicodeString::fromUTF8(StringPiece(str));
@@ -34,7 +63,7 @@ string normalize_text(const string& str) {
   return result;
 }
 
-string extract_text_html(GumboNode* node) {
+string ParserUtil::extract_text_html(GumboNode* node) {
   if (node->type == GUMBO_NODE_TEXT) {
     return string(node->v.text.text);
   } else if (node->type == GUMBO_NODE_ELEMENT && 
@@ -59,7 +88,7 @@ string extract_text_html(GumboNode* node) {
   }
 }
 
-const char* find_title(const GumboNode* root) {
+const char* ParserUtil::find_title(const GumboNode* root) {
   assert(root->type == GUMBO_NODE_ELEMENT);
   assert(root->v.element.children.length >= 2);
 
@@ -89,14 +118,13 @@ const char* find_title(const GumboNode* root) {
   return "<no title found>";
 }
 
-vector<string> find_terms(string& str) {
-  vector<string> terms;
+vector<string> ParserUtil::find_terms(string& str) {
   char * dup = strdup(str.c_str());
   char * word;
-  word = strtok(dup," ,.!?():\"'@#$&*;|\\^~}{[]<>¹²³³£¢¬+_-=/\r\b\t\n");
+  word = strtok(dup," ,.!?():\"'@#$&*;|\\^~}{[]<>¹²³³£¢¬+_-=/\n\r\b\t");
   while (word != NULL) {
     terms.push_back(word);
-    word = strtok(NULL, " ,.!?():\"'@#$&*;|\\^~}{[]<>¹²³³£¢¬+_-=/\r\b\t\n");
+    word = strtok(NULL, " ,.!?():\"'@#$&*;|\\^~}{[]<>¹²³³£¢¬+_-=/\n\r\b\t");
   }
   free(dup);
   return terms;
