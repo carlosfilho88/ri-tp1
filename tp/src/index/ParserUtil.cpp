@@ -1,18 +1,6 @@
 #include "StringUtil.h"
 #include "ParserUtil.h"
 
-string desaxUTF8(const string& str) {
-  string result;
- 
-  UnicodeString source = UnicodeString::fromUTF8(StringPiece(str));
-  UErrorCode status = U_ZERO_ERROR;
-  Transliterator *accentsConverter = Transliterator::createInstance("Lower; NFD; Latin-ASCII; [\u0301] remove; NFC;", UTRANS_FORWARD, status);
-  accentsConverter->transliterate(source);
-  source.toUTF8String(result);
-
-  return result;
-}
-
 void extractWords(const string& str) {
   string result;
   UnicodeString text = UnicodeString::fromUTF8(StringPiece("Cursos a distância de fotografia, estúdio fotográfico, serigrafia ou silk screen, representante comercial, bijuterias, operador de telemarketing, básico de informática, programador, lógica de programação, excel, digitação, almoxarife, comprador, eletricidade, telemensagens, recarga de cartuchos etc"));
@@ -29,18 +17,16 @@ void extractWords(const string& str) {
   }
 }
 
-vector<string> word(string& str) {
-  vector<string> voc;
-  char * dup = strdup(str.c_str());
-  char * word;
-  //cout << str << endl;
-  word = strtok(dup," ,.!?():\"'@#$&*;|\\^~}{[]<>¹²³³£¢¬+_-=/\r\b\t\n");
-  while (word != NULL) {
-    voc.push_back(word);
-    word = strtok(NULL, " ,.!?():\"'@#$&*;|\\^~}{[]<>¹²³³£¢¬+_-=/\r\b\t\n");
-  }
-  free(dup);
-  return voc;
+string desaxUTF8(const string& str) {
+  string result;
+ 
+  UnicodeString source = UnicodeString::fromUTF8(StringPiece(str));
+  UErrorCode status = U_ZERO_ERROR;
+  Transliterator *accentsConverter = Transliterator::createInstance("Lower; NFD; Latin-ASCII; [\u0301] remove; NFC;", UTRANS_FORWARD, status);
+  accentsConverter->transliterate(source);
+  source.toUTF8String(result);
+
+  return result;
 }
 
 string cleantext(GumboNode* node) {
@@ -94,4 +80,18 @@ const char* find_title(const GumboNode* root) {
     }
   }
   return "<no title found>";
+}
+
+vector<string> word(string& str) {
+  vector<string> voc;
+  char * dup = strdup(str.c_str());
+  char * word;
+  //cout << str << endl;
+  word = strtok(dup," ,.!?():\"'@#$&*;|\\^~}{[]<>¹²³³£¢¬+_-=/\r\b\t\n");
+  while (word != NULL) {
+    voc.push_back(word);
+    word = strtok(NULL, " ,.!?():\"'@#$&*;|\\^~}{[]<>¹²³³£¢¬+_-=/\r\b\t\n");
+  }
+  free(dup);
+  return voc;
 }

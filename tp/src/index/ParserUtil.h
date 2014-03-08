@@ -12,10 +12,11 @@
 #include "gumbo.h"
 
 using namespace std;
-string desaxUTF8(const string&);
+
 void extractWords(const string&);
-vector<string> word(string&);
+string desaxUTF8(const string&);
 string cleantext(GumboNode*);
 const char* find_title(const GumboNode*);
+vector<string> word(string&);
 
 #endif /* __PARSER_UTIL_H__ */
