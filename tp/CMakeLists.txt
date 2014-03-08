@@ -7,6 +7,5 @@ set(CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS} -g -ftest-coverage -fprofile-
 SET(CTEST_MEMORYCHECK_COMMAND "/usr/bin/valgrind")
 
 ADD_SUBDIRECTORY(ricp/src)
-ADD_SUBDIRECTORY(htmlcxx)
 ADD_SUBDIRECTORY(src)
 ADD_SUBDIRECTORY(test)
