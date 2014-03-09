@@ -3,7 +3,7 @@
 string normalize(string str) {
   unsigned char c;
   string normalized = string();
-  for(unsigned int i = 0; i < str.length(); i++) {
+  for(auto i = 0; i < str.length(); i++) {
     c = str.at(i);
     if (!
       ((c >= (char) 0x30 && c <= (char) 0x39) || //0-9

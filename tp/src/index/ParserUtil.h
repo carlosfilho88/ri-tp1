@@ -6,13 +6,14 @@
 #include <vector>
 #include <cassert>
 #include <algorithm>
+#include <unordered_map>
+#include <CollectionReader.h>
 #include <unicode/utypes.h>
 #include <unicode/unistr.h>
 #include <unicode/translit.h>
 #include <unicode/brkiter.h>
 #include <unicode/uniset.h>
 #include "gumbo.h"
-#include <CollectionReader.h>
 
 using namespace std;
 using namespace RICPNS;
@@ -20,16 +21,18 @@ using namespace RICPNS;
 class ParserUtil {
 
   string content;
-  vector<string> terms;
+  unordered_map<string, unsigned int> vocabulary;
+  unordered_map<unsigned int, vector<unsigned int>> occurrence;
+  unsigned int num_words = 0;
   
   public:
     ParserUtil();
     void read_collection(char** argv);
-    void extract_words(const string&);
+    /*void extract_words(const string&);*/ //BreakIterator not working properly ):
     string normalize_text(const string&);
     string extract_text_html(GumboNode*);
     const char* find_title(const GumboNode*);
-    vector<string> find_terms(string&);
+    vector<string> extract_terms(string&);
 
 };
 

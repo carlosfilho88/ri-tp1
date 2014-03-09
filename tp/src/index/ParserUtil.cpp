@@ -10,27 +10,50 @@ void ParserUtil::read_collection(char** argv) {
   GumboOutput* output;
   size_t begin;
   unsigned long num_docs = 0;
+  vector<string> terms;
   doc.clear();
   char ch;
 
-  while (cr->getNextDocument(doc) && num_docs < 100) {
+  while (cr->getNextDocument(doc) && num_docs < 10000) {
     content = doc.getText();
     begin = content.find('<');
     content = begin == content.npos ? "" : content.substr(begin, content.size());
     output = gumbo_parse(content.c_str());
     content = normalize_text(extract_text_html((GumboNode*)output->root));
     gumbo_destroy_output(&kGumboDefaultOptions, output);
-    find_terms(content);
-    for(vector<string>::const_iterator i = terms.begin(); i != terms.end(); ++i)
-      cout << *i << "\n";
+    terms = extract_terms(content);
+    unsigned int word_position = 1;
+    for(auto i = terms.begin(); i != terms.end(); ++i) {
+      word_position++;
+      unsigned int& id_term = vocabulary[*i];
 
+      if (id_term == 0) {
+        vocabulary[*i] = num_words;
+        occurrence[num_words].push_back(word_position);
+        num_words++;
+      } else {
+        occurrence[vocabulary[*i]].push_back(word_position);
+      }
+    }
+    cout << content;
+    for(auto i = vocabulary.begin(); i != vocabulary.end(); ++i) 
+      cout << "[" << i->first << "," << i->second << "]";
+
+    for(auto i = occurrence.begin(); i != occurrence.end(); ++i) {
+      cout << "[" << i->first << "]";
+      for(auto j = i->second.begin(); j != i->second.end(); ++j) {
+        cout << *j << " ";
+      }
+      cout << endl;
+    }
+    terms.clear();
     doc.clear();
     num_docs++;
     cin >> ch;
   }
 }
 
-void ParserUtil::extract_words(const string& str) {
+/*void ParserUtil::extract_words(const string& str) {
   string result;
   UnicodeString text = UnicodeString::fromUTF8(StringPiece(str));
   UnicodeString word;
@@ -50,16 +73,17 @@ void ParserUtil::extract_words(const string& str) {
   }
   delete wordIterator;
 }
-
+*/
 string ParserUtil::normalize_text(const string& str) {
   string result;
 
-  UnicodeString source = UnicodeString::fromUTF8(StringPiece(str));
+  UnicodeString source = UnicodeString::fromUTF8(str);
   UErrorCode status = U_ZERO_ERROR;
   Transliterator *accentsConverter = Transliterator::createInstance("Lower; NFD; Latin-ASCII; [\u0301] remove; NFC;", UTRANS_FORWARD, status);
   accentsConverter->transliterate(source);
   source.toUTF8String(result);
 
+  delete accentsConverter;
   return result;
 }
 
@@ -73,7 +97,7 @@ string ParserUtil::extract_text_html(GumboNode* node) {
             node->v.element.tag != GUMBO_TAG_TITLE) {
     string contents = "";
     GumboVector* children = &node->v.element.children;
-    for (int i = 0; i < children->length; ++i) {
+    for (auto i = 0; i < children->length; ++i) {
       const string text = extract_text_html((GumboNode*) children->data[i]);
       if (i != 0 && !text.empty()) {
         contents.append(" ");
@@ -94,7 +118,7 @@ const char* ParserUtil::find_title(const GumboNode* root) {
 
   const GumboVector* root_children = &root->v.element.children;
   GumboNode* head = NULL;
-  for (unsigned int i = 0; i < root_children->length; ++i) {
+  for (auto i = 0; i < root_children->length; ++i) {
     GumboNode* child = (GumboNode*)root_children->data[i];
     if (child->type == GUMBO_NODE_ELEMENT && child->v.element.tag == GUMBO_TAG_HEAD) {
       head = child;
@@ -104,7 +128,7 @@ const char* ParserUtil::find_title(const GumboNode* root) {
   assert(head != NULL);
 
   GumboVector* head_children = &head->v.element.children;
-  for (unsigned int i = 0; i < head_children->length; ++i) {
+  for (auto i = 0; i < head_children->length; ++i) {
     GumboNode* child = (GumboNode*)head_children->data[i];
     if (child->type == GUMBO_NODE_ELEMENT && child->v.element.tag == GUMBO_TAG_TITLE) {
       if (child->v.element.children.length != 1) {
@@ -118,14 +142,16 @@ const char* ParserUtil::find_title(const GumboNode* root) {
   return "<no title found>";
 }
 
-vector<string> ParserUtil::find_terms(string& str) {
+vector<string> ParserUtil::extract_terms(string& str) {
+  vector<string> terms;
   char * dup = strdup(str.c_str());
   char * word;
-  word = strtok(dup," ,.!?():\"'@#$&*;|\\^~}{[]<>¹²³³£¢¬+_-=/\n\r\b\t");
+  word = strtok(dup," ,.!?():\"'@#$&*;|\\^~}{[]<>¹²³³£¢¬+_-=/\n\r");
   while (word != NULL) {
     terms.push_back(word);
-    word = strtok(NULL, " ,.!?():\"'@#$&*;|\\^~}{[]<>¹²³³£¢¬+_-=/\n\r\b\t");
+    word = strtok(NULL, " ,.!?():\"'@#$&*;|\\^~}{[]<>¹²³³£¢¬+_-=/\n\r");
   }
+  free(word);
   free(dup);
   return terms;
 }
