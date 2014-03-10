@@ -27,10 +27,13 @@ void ParserUtil::read_collection(char** argv) {
       content = extract_text_html((GumboNode*)output->root);
       if(content.size() > 0) {
         content = normalize_text(content);
+        //cout << content << endl;
         
         if(content.size() > 0) {
           terms = extract_terms(content);
           unsigned int word_position = 0;
+          //for (auto i = terms.begin(); i != terms.end(); ++i)
+          //  cout << *i << endl;
 
           if(terms.size() > 0) {
             for(auto i = terms.begin(); i != terms.end(); ++i) {
@@ -39,9 +42,9 @@ void ParserUtil::read_collection(char** argv) {
 
               if (id_term == 0) {
                 vocabulary[*i] = num_words;
-                num_words++;
                 triples.emplace_back(Triple(id_term, doc_num, word_position));
                 frequences[num_words].push_back(word_position);
+                num_words++;
               } else {
                 triples.emplace_back(Triple(id_term, doc_num, word_position));
                 frequences[num_words].push_back(word_position);
@@ -165,8 +168,8 @@ vector<string> ParserUtil::extract_terms(string& str) {
   char * dup = strdup(str.c_str());
   char * word;
   word = strtok(dup," ,.!?():\"'@#$&*;|\\^~}{[]<>¹²³³£¢¬+_-=/\n\r");
-  if(word != NULL)
-    terms.push_back(word);
+  //if(word != NULL)
+  //  terms.push_back(word);
   while (word != NULL) {
     terms.push_back(word);
     word = strtok(NULL, " ,.!?():\"'@#$&*;|\\^~}{[]<>¹²³³£¢¬+_-=/\n\r");
@@ -180,9 +183,15 @@ void ParserUtil::write_to_index(vector<Triple>& triples, unordered_map<unsigned 
   const char filename[] = "index.bin";
   ofstream file(filename, ios_base::out | ios_base::app | ios_base::binary);
   
-  if (file.is_open()) {
+  //if (file.is_open()) {
     for (auto i = triples.begin(); i != triples.end(); ++i) 
       cout << i->id_term << "," << i->doc_number << "," << frequences[i->id_term].size() << "," << i->occurrence << endl;
-    file.close();
-  }
+      /*for(auto j = frequences.begin(); j!= frequences.end(); ++j){
+        cout << j->first << ";";
+        for(auto k = j->second.begin(); k!= j->second.end(); ++k)
+          cout << *k << ",";
+        cout << j->first << endl;
+      }*/
+   // file.close();
+  //}
 }

@@ -25,7 +25,7 @@ class ParserUtil {
 
   string content;
   unordered_map<string, unsigned int> vocabulary;
-  unsigned int num_words = 0;
+  unsigned int num_words;
   
   public:
     ParserUtil();
