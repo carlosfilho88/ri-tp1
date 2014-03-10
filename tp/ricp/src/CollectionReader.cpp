@@ -76,7 +76,8 @@ bool CollectionReader::getNextDocument(Document & doc) {
 
 		inputContentFileName_ = tmpContentFileName;
 		inputContentFilePtr_  = fopen(inputContentFileName_.c_str(), "r");
-		assert(inputContentFilePtr_ != NULL);
+		return false;
+		//assert(inputContentFilePtr_ != NULL);
 
 		if(DEBUG) { cerr << "File [" << inputContentFileName_ << "] openned." << endl;  }
 

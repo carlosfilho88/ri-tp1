@@ -9,46 +9,62 @@ void ParserUtil::read_collection(char** argv) {
   Document doc;
   GumboOutput* output;
   size_t begin;
-  unsigned long num_docs = 0;
+  unsigned int doc_num = 1;
+  unsigned int doc_indexed = 0;
   vector<string> terms;
   doc.clear();
   char ch;
+  vector<Triple> triples;
+  unordered_map<unsigned int, vector<unsigned int>> frequences;
 
-  while (cr->getNextDocument(doc) && num_docs < 10000) {
+  while (cr->getNextDocument(doc)) {
     content = doc.getText();
     begin = content.find('<');
     content = begin == content.npos ? "" : content.substr(begin, content.size());
-    output = gumbo_parse(content.c_str());
-    content = normalize_text(extract_text_html((GumboNode*)output->root));
-    gumbo_destroy_output(&kGumboDefaultOptions, output);
-    terms = extract_terms(content);
-    unsigned int word_position = 1;
-    for(auto i = terms.begin(); i != terms.end(); ++i) {
-      word_position++;
-      unsigned int& id_term = vocabulary[*i];
 
-      if (id_term == 0) {
-        vocabulary[*i] = num_words;
-        occurrence[num_words].push_back(word_position);
-        num_words++;
-      } else {
-        occurrence[vocabulary[*i]].push_back(word_position);
-      }
-    }
-    cout << content;
-    for(auto i = vocabulary.begin(); i != vocabulary.end(); ++i) 
-      cout << "[" << i->first << "," << i->second << "]";
+    if(content.size() > 0) {
+      output = gumbo_parse(content.c_str());
+      content = extract_text_html((GumboNode*)output->root);
+      if(content.size() > 0) {
+        content = normalize_text(content);
+        
+        if(content.size() > 0) {
+          terms = extract_terms(content);
+          unsigned int word_position = 0;
 
-    for(auto i = occurrence.begin(); i != occurrence.end(); ++i) {
-      cout << "[" << i->first << "]";
-      for(auto j = i->second.begin(); j != i->second.end(); ++j) {
-        cout << *j << " ";
+          if(terms.size() > 0) {
+            for(auto i = terms.begin(); i != terms.end(); ++i) {
+              word_position++;
+              unsigned int& id_term = vocabulary[*i];
+
+              if (id_term == 0) {
+                vocabulary[*i] = num_words;
+                num_words++;
+                triples.emplace_back(Triple(id_term, doc_num, word_position));
+                frequences[num_words].push_back(word_position);
+              } else {
+                triples.emplace_back(Triple(id_term, doc_num, word_position));
+                frequences[num_words].push_back(word_position);
+              }
+            }
+            if(triples.size() > 0)
+              write_to_index(triples, frequences);
+            frequences.clear();
+            triples.clear();
+            terms.clear();
+            doc.clear();
+            doc_indexed++;
+          }
+        }
       }
-      cout << endl;
+      
+      gumbo_destroy_output(&kGumboDefaultOptions, output);
     }
-    terms.clear();
-    doc.clear();
-    num_docs++;
+
+    //if(doc_num % 10 == 0) {
+      //cout << doc_num << " " << doc_indexed<< endl;
+    //}
+    doc_num++;
     cin >> ch;
   }
 }
@@ -75,16 +91,18 @@ void ParserUtil::read_collection(char** argv) {
 }
 */
 string ParserUtil::normalize_text(const string& str) {
-  string result;
+  if (str.size() > 0) {
+    string result("");
+    UnicodeString source = UnicodeString::fromUTF8(str);
+    UErrorCode status = U_ZERO_ERROR;
+    Transliterator *accentsConverter = Transliterator::createInstance("Lower; NFD; Latin-ASCII; [\u0301] remove; NFC;", UTRANS_FORWARD, status);
+    accentsConverter->transliterate(source);
+    source.toUTF8String(result);
 
-  UnicodeString source = UnicodeString::fromUTF8(str);
-  UErrorCode status = U_ZERO_ERROR;
-  Transliterator *accentsConverter = Transliterator::createInstance("Lower; NFD; Latin-ASCII; [\u0301] remove; NFC;", UTRANS_FORWARD, status);
-  accentsConverter->transliterate(source);
-  source.toUTF8String(result);
-
-  delete accentsConverter;
-  return result;
+    delete accentsConverter;
+    return result;
+  } else 
+    return "";
 }
 
 string ParserUtil::extract_text_html(GumboNode* node) {
@@ -147,6 +165,8 @@ vector<string> ParserUtil::extract_terms(string& str) {
   char * dup = strdup(str.c_str());
   char * word;
   word = strtok(dup," ,.!?():\"'@#$&*;|\\^~}{[]<>¹²³³£¢¬+_-=/\n\r");
+  if(word != NULL)
+    terms.push_back(word);
   while (word != NULL) {
     terms.push_back(word);
     word = strtok(NULL, " ,.!?():\"'@#$&*;|\\^~}{[]<>¹²³³£¢¬+_-=/\n\r");
@@ -154,4 +174,15 @@ vector<string> ParserUtil::extract_terms(string& str) {
   free(word);
   free(dup);
   return terms;
+}
+
+void ParserUtil::write_to_index(vector<Triple>& triples, unordered_map<unsigned int, vector<unsigned int>>& frequences) {
+  const char filename[] = "index.bin";
+  ofstream file(filename, ios_base::out | ios_base::app | ios_base::binary);
+  
+  if (file.is_open()) {
+    for (auto i = triples.begin(); i != triples.end(); ++i) 
+      cout << i->id_term << "," << i->doc_number << "," << frequences[i->id_term].size() << "," << i->occurrence << endl;
+    file.close();
+  }
 }
