@@ -1,8 +1,7 @@
 #include "StringUtil.h"
 #include "ParserUtil.h"
 
-ParserUtil::ParserUtil() {
-}
+ParserUtil::ParserUtil() : num_words(1) {}
 
 void ParserUtil::read_collection(char** argv) {
   CollectionReader* cr = new CollectionReader(argv[1], argv[2]);
@@ -75,8 +74,9 @@ void ParserUtil::read_collection(char** argv) {
       ttime = 0;
     }
     doc_num++;
-    //cin >> ch;
+    cin >> ch;
   }
+  cout << doc_num << ";" << doc_indexed << ";" << vocabulary.size() << endl;
 }
 
 /*void ParserUtil::extract_words(const string& str) {
@@ -187,21 +187,24 @@ vector<string> ParserUtil::extract_terms(string& str) {
 }
 
 void ParserUtil::write_to_index(vector<Triple>& triples, unordered_map<unsigned int, vector<unsigned int>>& frequences) {
-  const char filename[] = "index.bin";
-  ofstream file(filename, ios_base::out | ios_base::app | ios_base::binary);
-  //ifstream file_read(filename, ios::binary);
+  const char filename[] = "/tmp/index.bin";
+  FILE * file;
+  file = fopen(filename, "wb+");
+  ifstream file_read(filename, ios::binary);
   Quad q;
-  if (file.is_open()) {
+  if (file != NULL) {
     for (auto i = triples.begin(); i != triples.end(); ++i) {
       q.id_term = i->id_term;
       q.doc_number = i->doc_number;
       q.frequence = frequences[i->id_term].size();
       q.occurrence = i->occurrence;
-      file.write((char *)(&q), sizeof(q));
+      //file.write((char *)(&q), sizeof(q));
+      fwrite((&q), 1, sizeof(q), file);
  
       //file_read.read((char *)(&q), sizeof(q));
       //cout << q.id_term << "," << q.doc_number << "," << q.frequence << "," << q.occurrence << endl;
       }
-    file.close();
+    //file.close();
+    fclose(file);
   }
 }

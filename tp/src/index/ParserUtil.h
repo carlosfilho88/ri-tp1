@@ -2,6 +2,7 @@
 #define __PARSER_UTIL_H__
 
 #include <iostream>
+#include <stdio.h>
 #include <fstream>
 #include <ctime>
 #include <cstring>
@@ -26,7 +27,7 @@ class ParserUtil {
 
   string content;
   unordered_map<string, unsigned int> vocabulary;
-  unsigned int num_words = 1;
+  unsigned int num_words;
   
   public:
     ParserUtil();
