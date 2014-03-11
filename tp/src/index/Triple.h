@@ -1,11 +1,6 @@
 #ifndef __TRIPLE_H__
 #define __TRIPLE_H__
 
-#include <sstream>
-#include <string>
-#include <vector>
-#include <iterator>
-
 using namespace std;
 
 class Triple {
@@ -27,13 +22,6 @@ class Triple {
       doc_number = doc;
       occurrence = occ;
     }
-
-    string toString() {
-      ostringstream str;
-      str << id_term << "," << doc_number << "," << occurrence;
-      return str.str();
-    }
-
 };
 
 typedef struct {
@@ -41,6 +29,6 @@ typedef struct {
   unsigned int doc_number;
   unsigned int frequence;
   unsigned int occurrence;
-} Quad;
+} Inverted;
 
 #endif /* __TRIPLE_H__ */
