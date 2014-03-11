@@ -14,7 +14,6 @@ You must have installed the following libraries:
   * libicu-dev libicu48-dbg (via apt repository)
 - [gumbo-parser](https://github.com/google/gumbo-parser) (built-in)
   * libtool automake (via apt repository)
-- [htmlcxx](https://github.com/dhoerl/htmlcxx) (built-in)
 
 ## How to compile this code
 ```bash
