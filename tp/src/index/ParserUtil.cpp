@@ -17,7 +17,10 @@ void ParserUtil::read_collection(char** argv) {
   vector<Triple> triples;
   unordered_map<unsigned int, vector<unsigned int>> frequences;
 
+  double tstart, tstop, ttime;
   while (cr->getNextDocument(doc)) {
+    tstart = (double)clock();
+
     content = doc.getText();
     begin = content.find('<');
     content = begin == content.npos ? "" : content.substr(begin, content.size());
@@ -31,24 +34,25 @@ void ParserUtil::read_collection(char** argv) {
         
         if(content.size() > 0) {
           terms = extract_terms(content);
-          unsigned int word_position = 0;
-          //for (auto i = terms.begin(); i != terms.end(); ++i)
-          //  cout << *i << endl;
+          unsigned int word_position = 1;
+          /*for (auto i = terms.begin(); i != terms.end(); ++i)
+            cout << *i << ", ";
+          cout << endl;*/
 
           if(terms.size() > 0) {
             for(auto i = terms.begin(); i != terms.end(); ++i) {
-              word_position++;
               unsigned int& id_term = vocabulary[*i];
 
               if (id_term == 0) {
                 vocabulary[*i] = num_words;
-                triples.emplace_back(Triple(id_term, doc_num, word_position));
+                triples.emplace_back(Triple(num_words, doc_num, word_position));
                 frequences[num_words].push_back(word_position);
                 num_words++;
               } else {
                 triples.emplace_back(Triple(id_term, doc_num, word_position));
-                frequences[num_words].push_back(word_position);
+                frequences[id_term].push_back(word_position);
               }
+              word_position++;
             }
             if(triples.size() > 0)
               write_to_index(triples, frequences);
@@ -63,12 +67,15 @@ void ParserUtil::read_collection(char** argv) {
       
       gumbo_destroy_output(&kGumboDefaultOptions, output);
     }
+    tstop = (double)clock();
+    ttime += (double)(tstop-tstart)/CLOCKS_PER_SEC;
 
-    //if(doc_num % 10 == 0) {
-      //cout << doc_num << " " << doc_indexed<< endl;
-    //}
+    if(doc_num % 1000 == 0) {
+      cout << doc_num << ";" << doc_indexed << ";" << vocabulary.size() << ";" << ttime << endl;
+      ttime = 0;
+    }
     doc_num++;
-    cin >> ch;
+    //cin >> ch;
   }
 }
 
@@ -182,16 +189,19 @@ vector<string> ParserUtil::extract_terms(string& str) {
 void ParserUtil::write_to_index(vector<Triple>& triples, unordered_map<unsigned int, vector<unsigned int>>& frequences) {
   const char filename[] = "index.bin";
   ofstream file(filename, ios_base::out | ios_base::app | ios_base::binary);
-  
-  //if (file.is_open()) {
-    for (auto i = triples.begin(); i != triples.end(); ++i) 
-      cout << i->id_term << "," << i->doc_number << "," << frequences[i->id_term].size() << "," << i->occurrence << endl;
-      /*for(auto j = frequences.begin(); j!= frequences.end(); ++j){
-        cout << j->first << ";";
-        for(auto k = j->second.begin(); k!= j->second.end(); ++k)
-          cout << *k << ",";
-        cout << j->first << endl;
-      }*/
-   // file.close();
-  //}
+  //ifstream file_read(filename, ios::binary);
+  Quad q;
+  if (file.is_open()) {
+    for (auto i = triples.begin(); i != triples.end(); ++i) {
+      q.id_term = i->id_term;
+      q.doc_number = i->doc_number;
+      q.frequence = frequences[i->id_term].size();
+      q.occurrence = i->occurrence;
+      file.write((char *)(&q), sizeof(q));
+ 
+      //file_read.read((char *)(&q), sizeof(q));
+      //cout << q.id_term << "," << q.doc_number << "," << q.frequence << "," << q.occurrence << endl;
+      }
+    file.close();
+  }
 }

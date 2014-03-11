@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <ctime>
 #include <cstring>
 #include <vector>
 #include <cassert>
@@ -25,7 +26,7 @@ class ParserUtil {
 
   string content;
   unordered_map<string, unsigned int> vocabulary;
-  unsigned int num_words;
+  unsigned int num_words = 1;
   
   public:
     ParserUtil();

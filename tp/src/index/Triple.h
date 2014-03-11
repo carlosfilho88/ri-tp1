@@ -36,4 +36,11 @@ class Triple {
 
 };
 
+typedef struct {
+  unsigned int id_term;
+  unsigned int doc_number;
+  unsigned int frequence;
+  unsigned int occurrence;
+} Quad;
+
 #endif /* __TRIPLE_H__ */
