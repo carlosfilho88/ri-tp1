@@ -1,7 +1,12 @@
 #ifndef __TRIPLE_H__
 #define __TRIPLE_H__
 
-using namespace std;
+typedef struct {
+  unsigned int id_term;
+  unsigned int doc_number;
+  unsigned int frequence;
+  unsigned int occurrence;
+} Inverted;
 
 class Triple {
 
@@ -23,12 +28,5 @@ class Triple {
       occurrence = occ;
     }
 };
-
-typedef struct {
-  unsigned int id_term;
-  unsigned int doc_number;
-  unsigned int frequence;
-  unsigned int occurrence;
-} Inverted;
 
 #endif /* __TRIPLE_H__ */

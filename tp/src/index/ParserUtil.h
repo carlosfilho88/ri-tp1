@@ -3,7 +3,8 @@
 
 #include <iostream>
 #include <ctime>
-#include <cstring>
+#include <string>
+#include <sstream>
 #include <vector>
 #include <cassert>
 #include <algorithm>
@@ -36,7 +37,8 @@ class ParserUtil {
     string extract_text_html(GumboNode*);
     const char* find_title(const GumboNode*);
     vector<string> extract_terms(string&);
-    void write_run(vector<Triple>& triples, unordered_map<unsigned int, vector<unsigned int>>& frequences);
+    void flush();
+    void write_run();
 
 };
 

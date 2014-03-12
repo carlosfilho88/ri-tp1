@@ -1,6 +1,8 @@
 #include "StringUtil.h"
 #include "ParserUtil.h"
 
+vector<Inverted> buffer;
+
 ParserUtil::ParserUtil() : num_words(1) {}
 
 void ParserUtil::read_collection() {
@@ -11,11 +13,13 @@ void ParserUtil::read_collection() {
   size_t begin;
   unsigned int doc_num = 1;
   unsigned int doc_indexed = 0;
+  Inverted inv;
   vector<string> terms;
   vector<Triple> triples;
   unordered_map<unsigned int, vector<unsigned int>> frequences;
   char ch;
   doc.clear();
+  buffer.reserve(config->run_size/sizeof(Inverted));
 
   double tstart, tstop, ttime;
   while (cr->getNextDocument(doc)) {
@@ -50,8 +54,16 @@ void ParserUtil::read_collection() {
               }
               word_position++;
             }
-            if(triples.size() > 0)
-              write_run(triples, frequences);
+            if(triples.size() > 0) {
+              for (auto i = triples.begin(); i != triples.end(); ++i) {
+                inv.id_term = i->id_term;
+                inv.doc_number = i->doc_number;
+                inv.frequence = frequences[i->id_term].size();
+                inv.occurrence = i->occurrence;
+                buffer.push_back(inv);
+                flush();
+              }
+            }
             frequences.clear();
             triples.clear();
             terms.clear();
@@ -67,11 +79,12 @@ void ParserUtil::read_collection() {
     tstop = (double)clock();
     ttime += (double)(tstop-tstart)/CLOCKS_PER_SEC;
 
-    //if(doc_num % 1 == 0) {
+    if(doc_num % 1000 == 0) {
       cout << doc_num << ";" << doc_indexed << ";" << vocabulary.size() << ";" << ttime << endl;
       ttime = 0;
-    //}
+    }
     doc_num++;
+    
     //cin >> ch;
   }
   cout << doc_num << ";" << doc_indexed << ";" << vocabulary.size() << endl;
@@ -184,21 +197,25 @@ vector<string> ParserUtil::extract_terms(string& str) {
   return terms;
 }
 
-void ParserUtil::write_run(vector<Triple>& triples, unordered_map<unsigned int, vector<unsigned int>>& frequences) {
+void ParserUtil::write_run() {
   Configs* config = Configs::createInstance();
-  Inverted inv;
   FILE * file;
-  file = fopen((config->FILENAME).c_str(), "wb+");
+  stringstream filename;
+  filename << config->RUN_NUM++ << config->RUN_FILETYPE;
+  cout << filename.str() << endl;
+  file = fopen((filename.str()).c_str(), "wb+");
 
   if (file != NULL) {
-    for (auto i = triples.begin(); i != triples.end(); ++i) {
-      inv.id_term = i->id_term;
-      inv.doc_number = i->doc_number;
-      inv.frequence = frequences[i->id_term].size();
-      inv.occurrence = i->occurrence;
-      fwrite((&inv), 1, sizeof(inv), file);
-    }
-    fclose(file);
-  }
+    for (auto i = 0; i < buffer.size(); ++i)
+      fwrite((&buffer[i]), 1, sizeof(buffer[i]), file);
 
+    config->runs.push_back(config->RUN_NUM);
+    fclose(file);
+    buffer.clear();
+  }
 }
+
+void ParserUtil::flush() {
+  if(buffer.size() >= buffer.capacity())
+    write_run();
+} 

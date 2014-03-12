@@ -3,6 +3,8 @@
 #define RUN_SIZE 256
 #include <iostream>
 #include <string>
+#include <vector>
+#include "Triple.h"
 
 using namespace std;
 
@@ -25,11 +27,16 @@ class Configs {
 
     string FILENAME;
     string RUN_FILETYPE;
+    string RUN_DIRECTORY;
     string INPUT_DIRECTORY;
     string INDEX_FILENAME;
+    unsigned int RUN_NUM;
     unsigned int run_size;
+    vector<unsigned int> runs;
 
     void read_params(int argc, char** argv) {
+      run_size = RUN_SIZE*1024*1024;
+      RUN_NUM = 0;
 
       for(unsigned int i = 0; i < argc; ++i){
         string param(argv[i]);
@@ -48,9 +55,13 @@ class Configs {
         }
       }
     }
-
+    
     private:
-      Configs() : FILENAME(""), RUN_FILETYPE(".run"), INPUT_DIRECTORY("../../files"), INDEX_FILENAME("indexToCompressedColection.txt") {}
+      Configs() : FILENAME(""), 
+                  RUN_FILETYPE(".run"), 
+                  RUN_DIRECTORY("/tpm/runs"), 
+                  INPUT_DIRECTORY("/media/files"), 
+                  INDEX_FILENAME("index.txt") {}
 
     static Configs* config;
 

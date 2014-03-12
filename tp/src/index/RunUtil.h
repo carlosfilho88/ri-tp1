@@ -3,6 +3,8 @@
 
 #include <iostream>
 #include <fstream>
+#include "Triple.h"
+#include "Configs.h"
 
 class RunUtil {
 

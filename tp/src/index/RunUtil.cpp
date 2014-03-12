@@ -1,6 +1,4 @@
-#include "Triple.h"
 #include "RunUtil.h"
-#include "index/Configs.h"
 
   RunUtil::RunUtil() {}
 
