@@ -5,8 +5,8 @@
   RunUtil::RunUtil() {}
 
   void RunUtil::sort() {
-    Configs conf; 
-    ifstream file(FILENAME, ios::binary);
+    Configs* config = Configs::createInstance();
+    ifstream file(config->FILENAME.c_str(), ios::binary);
     Inverted inv;
 
     if (file.is_open()) {

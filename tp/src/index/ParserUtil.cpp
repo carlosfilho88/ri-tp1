@@ -4,8 +4,8 @@
 ParserUtil::ParserUtil() : num_words(1) {}
 
 void ParserUtil::read_collection() {
-
-  CollectionReader* cr = new CollectionReader(INPUT_DIRECTORY, INDEX_FILENAME);
+  Configs* config = Configs::createInstance();
+  CollectionReader* cr = new CollectionReader(config->INPUT_DIRECTORY, config->INDEX_FILENAME);
   Document doc;
   GumboOutput* output;
   size_t begin;
@@ -185,9 +185,10 @@ vector<string> ParserUtil::extract_terms(string& str) {
 }
 
 void ParserUtil::write_run(vector<Triple>& triples, unordered_map<unsigned int, vector<unsigned int>>& frequences) {
+  Configs* config = Configs::createInstance();
   Inverted inv;
   FILE * file;
-  file = fopen(FILENAME, "wb+");
+  file = fopen((config->FILENAME).c_str(), "wb+");
 
   if (file != NULL) {
     for (auto i = triples.begin(); i != triples.end(); ++i) {

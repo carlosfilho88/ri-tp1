@@ -9,14 +9,14 @@ using namespace std;
 class Configs {
 
   public:  
-    static Config* Instance(void) {
+    static Configs* createInstance(void) {
       if(config == NULL) {
-        config = new Config();
+        config = new Configs();
       }
       return config;
     }
  
-    ~Config(){
+    ~Configs(){
       if(config != NULL){
         delete config;
         config = NULL;
@@ -24,14 +24,10 @@ class Configs {
     }
 
     string FILENAME;
-    string RUN_NAME;
+    string RUN_FILETYPE;
     string INPUT_DIRECTORY;
     string INDEX_FILENAME;
-    typedef unsigned int ui;
-    ui KB = 1024;
-    ui MB = KB * 1024;
-    ui GB = MB * 1024;
-    ui runSize;
+    unsigned int run_size;
 
     void read_params(int argc, char** argv) {
 
@@ -40,10 +36,7 @@ class Configs {
 
         if(param == "-r") {
           i++;
-          if(sscanf(argv[i] , "%d", &runSize) != EOF)
-            runSize = runSize*MB;
-          else
-            runSize = RUN_SIZE*MB;
+          run_size = atoi(argv[i])*1024*1024;
         } 
         if( param == "-d"){
           i++;
@@ -55,6 +48,11 @@ class Configs {
         }
       }
     }
+
+    private:
+      Configs() : FILENAME(""), RUN_FILETYPE(".run"), INPUT_DIRECTORY("../../files"), INDEX_FILENAME("indexToCompressedColection.txt") {}
+
+    static Configs* config;
 
 };
 #endif /* __CONFIGS_H__ */

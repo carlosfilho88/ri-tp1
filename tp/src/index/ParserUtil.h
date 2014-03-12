@@ -15,7 +15,7 @@
 #include <unicode/translit.h>
 #include <unicode/brkiter.h>
 #include <unicode/uniset.h>
-#include "index/configs.h"
+#include "Configs.h"
 #include "gumbo.h"
 #include "Triple.h"
 

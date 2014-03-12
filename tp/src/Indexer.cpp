@@ -5,9 +5,11 @@
 #include "index/ParserUtil.h"
 #include "index/RunUtil.h"
 
+Configs* Configs::config = NULL;
+
 int main(int argc, char** argv) {
-  Configs conf;
-  conf.read_params(argc, argv);
+  Configs* config = Configs::createInstance();
+  config->read_params(argc, argv);
 
   double tstart, tstop, ttime;
   tstart = (double)clock();
@@ -16,7 +18,7 @@ int main(int argc, char** argv) {
   parser.read_collection();
 
   RunUtil run;
-  //run.sort();
+  run.sort();
 
   tstop = (double)clock();
   ttime = (double)(tstop-tstart)/CLOCKS_PER_SEC;
