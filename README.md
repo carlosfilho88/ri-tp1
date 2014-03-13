@@ -21,6 +21,7 @@ cd tp/
 mkdir -p build && cd build/
 cmake ..
 cd src/ && make
+```
 
 ## Parameters
 You can set these follow parameters to configure environment:
@@ -29,7 +30,6 @@ You can set these follow parameters to configure environment:
 - **-d** to index directory (collection)
 - **-f** to index filename
 
-```
 ## Running an example
 ```bash
 cd build/src/
