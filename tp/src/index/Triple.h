@@ -1,12 +1,23 @@
 #ifndef __TRIPLE_H__
 #define __TRIPLE_H__
+#include <algorithm> 
 
-typedef struct {
+struct Inverted {
   unsigned int id_term;
   unsigned int doc_number;
   unsigned int frequence;
   unsigned int occurrence;
-} Inverted;
+  bool operator () (const Inverted &a, const Inverted &b) {
+    if(a.id_term < b.id_term)
+      return true;
+    if(a.id_term > b.id_term)
+      return false;
+    if(a.doc_number < b.doc_number)
+      return true;
+    if(a.doc_number > b.doc_number)
+      return false;
+  }
+};
 
 class Triple {
 

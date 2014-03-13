@@ -20,6 +20,7 @@ void ParserUtil::read_collection() {
   char ch;
   doc.clear();
   buffer.reserve(config->run_size/sizeof(Inverted));
+  cout << "Capacity: " << buffer.capacity() << endl;
 
   double tstart, tstop, ttime;
   while (cr->getNextDocument(doc)) {
@@ -72,10 +73,9 @@ void ParserUtil::read_collection() {
           }
         }
       }
-      
       gumbo_destroy_output(&kGumboDefaultOptions, output);
     }
-    
+
     tstop = (double)clock();
     ttime += (double)(tstop-tstart)/CLOCKS_PER_SEC;
 
@@ -87,6 +87,7 @@ void ParserUtil::read_collection() {
     
     //cin >> ch;
   }
+  write_run();
   cout << doc_num << ";" << doc_indexed << ";" << vocabulary.size() << endl;
 }
 
@@ -198,21 +199,31 @@ vector<string> ParserUtil::extract_terms(string& str) {
 }
 
 void ParserUtil::write_run() {
-  Configs* config = Configs::createInstance();
-  FILE * file;
-  stringstream filename;
-  filename << config->RUN_NUM++ << config->RUN_FILETYPE;
-  cout << filename.str() << endl;
-  file = fopen((filename.str()).c_str(), "wb+");
+  if(buffer.size() > 0) {
+    Configs* config = Configs::createInstance();
+    FILE * file;
+    Inverted inv;
+    stringstream filename;
+    filename << config->RUN_DIRECTORY << config->RUN_NUM++ << config->RUN_FILETYPE;
+    cout << filename.str() << endl;
+    file = fopen((filename.str()).c_str(), "wb+");
 
-  if (file != NULL) {
-    for (auto i = 0; i < buffer.size(); ++i)
-      fwrite((&buffer[i]), 1, sizeof(buffer[i]), file);
+    if (file != NULL) {
+      sort(buffer.begin(), buffer.end(), inv);
+      for (auto i = 0; i < buffer.size(); ++i)
+        fwrite((&buffer[i]), 1, sizeof(buffer[i]), file);
 
-    config->runs.push_back(config->RUN_NUM);
-    fclose(file);
-    buffer.clear();
+      config->runs.push_back(config->RUN_NUM);
+      fclose(file);
+      buffer.clear();
+    }
   }
+  /*Inverted inv;
+  sort(buffer.begin(), buffer.end(), inv);
+  for (auto i = 0; i < buffer.size(); ++i)
+    cout << buffer[i].id_term << "," << buffer[i].doc_number << "," << buffer[i].frequence << "," << buffer[i].occurrence << endl;
+  cout << "End buffer" << endl;
+  buffer.clear();*/
 }
 
 void ParserUtil::flush() {

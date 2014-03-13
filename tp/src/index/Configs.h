@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <sys/stat.h>
 #include "Triple.h"
 
 using namespace std;
@@ -35,6 +36,7 @@ class Configs {
     vector<unsigned int> runs;
 
     void read_params(int argc, char** argv) {
+      mkdir("/tmp/runs", 0755);
       run_size = RUN_SIZE*1024*1024;
       RUN_NUM = 0;
 
@@ -59,7 +61,7 @@ class Configs {
     private:
       Configs() : FILENAME(""), 
                   RUN_FILETYPE(".run"), 
-                  RUN_DIRECTORY("/tpm/runs"), 
+                  RUN_DIRECTORY("/tmp/runs/"), 
                   INPUT_DIRECTORY("/media/files"), 
                   INDEX_FILENAME("index.txt") {}
 

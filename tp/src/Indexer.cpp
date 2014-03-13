@@ -17,8 +17,8 @@ int main(int argc, char** argv) {
   ParserUtil parser;
   parser.read_collection();
 
-  RunUtil run;
-  run.sort();
+  //RunUtil run;
+  //run.load();
 
   tstop = (double)clock();
   ttime = (double)(tstop-tstart)/CLOCKS_PER_SEC;
