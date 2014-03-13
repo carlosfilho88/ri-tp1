@@ -1,7 +1,8 @@
 ri-tp1
 ======
-
-Trabalho Prático I: Recuperação de Informação - Máquinas de Busca na Web
+UFMG - ICEx - DCC
+Recuperação de Informação - Máquinas de Busca na Web (MSc. 2014.1)
+Trabalho Prático I
 
 *Practical Work I: Information Retrieval - Web Search Machines*
 
@@ -15,7 +16,7 @@ You must have installed the following libraries:
 - [gumbo-parser](https://github.com/google/gumbo-parser) (built-in)
   * libtool automake (via apt repository)
 
-## How to compile this code
+## How to compile
 ```bash
 cd tp/
 mkdir -p build && cd build/
@@ -26,9 +27,9 @@ cd src/ && make
 ## Parameters
 You can set these follow parameters to configure environment:
 
-- **-r** to run size (default 256MB)
-- **-d** to index directory (collection)
-- **-f** to index filename
+- **-r** to set run size (default 256MB)
+- **-d** to set index directory (collection)
+- **-f** to set index filename
 
 ## Running an example
 ```bash
