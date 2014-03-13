@@ -25,9 +25,9 @@ cd src/ && make
 ## Parameters
 You can set these follow parameters to configure environment:
 
-- __-r__ to run size (default 256MB)
-- __-d__ to index directory (collection)
-- __-f__ to index filename
+- **-r** to run size (default 256MB)
+- **-d** to index directory (collection)
+- **-f** to index filename
 
 ```
 ## Running an example
