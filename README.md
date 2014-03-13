@@ -2,6 +2,7 @@ ri-tp1
 ======
 UFMG - ICEx - DCC
 Recuperação de Informação - Máquinas de Busca na Web (MSc. 2014.1)
+
 Trabalho Prático I
 
 *Practical Work I: Information Retrieval - Web Search Machines*
