@@ -21,8 +21,15 @@ cd tp/
 mkdir -p build && cd build/
 cmake ..
 cd src/ && make
-```
 
+## Parameters
+You can set these follow parameters to configure environment:
+
+- __-r__ to run size (default 256MB)
+- __-d__ to index directory (collection)
+- __-f__ to index filename
+
+```
 ## Running an example
 ```bash
 cd build/src/
