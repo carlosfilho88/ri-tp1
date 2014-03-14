@@ -43,15 +43,23 @@ class Configs {
       for(unsigned int i = 0; i < argc; ++i){
         string param(argv[i]);
 
-        if(param == "-r") {
+        if(param == "-rs") {
           i++;
           run_size = atoi(argv[i])*1024*1024;
         } 
-        if( param == "-d"){
+        else if(param == "-rf"){
+          i++;
+          RUN_FILETYPE = string(argv[i]);
+        }
+        else if(param == "-rd"){
+          i++;
+          RUN_DIRECTORY = string(argv[i]);
+        }
+        else if(param == "-id"){
           i++;
           INPUT_DIRECTORY = string(argv[i]);
         }
-        else if(param == "-f"){
+        else if(param == "-if"){
           i++;
           INDEX_FILENAME = string(argv[i]);
         }

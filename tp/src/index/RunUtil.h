@@ -13,6 +13,11 @@
 
 class RunUtil {
 
+  struct {
+    const char *filename;
+    void (*operation)(ifstream&);
+  } filelist;
+
   public:
     RunUtil();
     void load();
