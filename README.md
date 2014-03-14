@@ -1,6 +1,7 @@
 ri-tp1
 ======
 UFMG - ICEx - DCC
+
 Recuperação de Informação - Máquinas de Busca na Web (MSc. 2014.1)
 
 Trabalho Prático I
@@ -28,9 +29,11 @@ cd src/ && make
 ## Parameters
 You can set these follow parameters to configure environment:
 
-- **_-r_** to set run size (default 256MB)
-- **_-d_** to set index directory (collection)
-- **_-f_** to set index filename
+- **_-rd_** to set run directory (default /var/tmp)
+- **_-rf_** to set run filetype (default .run)
+- **_-rs_** to set run size (default 256MB)
+- **_-id_** to set index directory (collection)
+- **_-if_** to set index filename
 
 ## Running an example
 ```bash
