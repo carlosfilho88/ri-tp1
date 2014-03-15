@@ -31,13 +31,17 @@ class Configs {
     string RUN_DIRECTORY;
     string INPUT_DIRECTORY;
     string INDEX_FILENAME;
+    string INDEX_OUTPUT_FILENAME;
+    string INDEX_OUTPUT_DIRECTORY;
+    string VOCABULARY_DIRECTORY;
+    string VOCABULARY_FILENAME;
     unsigned int RUN_NUM;
     unsigned int run_size;
     vector<unsigned int> runs;
 
     void read_params(int argc, char** argv) {
       mkdir("/tmp/runs", 0755);
-      run_size = RUN_SIZE*1024*1024;
+      run_size = RUN_SIZE*100;
       RUN_NUM = 0;
 
       for(unsigned int i = 0; i < argc; ++i){
@@ -64,6 +68,22 @@ class Configs {
           i++;
           INDEX_FILENAME = string(argv[i]);
         }
+        else if(param == "-od"){
+          i++;
+          INDEX_OUTPUT_DIRECTORY = string(argv[i]);
+        }
+        else if(param == "-of"){
+          i++;
+          INDEX_OUTPUT_FILENAME = string(argv[i]);
+        }
+        else if(param == "-vd"){
+          i++;
+          VOCABULARY_DIRECTORY = string(argv[i]);
+        }
+        else if(param == "-vf"){
+          i++;
+          VOCABULARY_FILENAME = string(argv[i]);
+        }
       }
     }
     
@@ -72,6 +92,10 @@ class Configs {
                   RUN_FILETYPE(".run"), 
                   RUN_DIRECTORY("/tmp/runs/"), 
                   INPUT_DIRECTORY("/media/files"), 
+                  INDEX_OUTPUT_DIRECTORY("/media/files"), 
+                  VOCABULARY_DIRECTORY("/media/files"), 
+                  INDEX_OUTPUT_FILENAME("inverted_index.bin"), 
+                  VOCABULARY_FILENAME("vocabulary.bin"), 
                   INDEX_FILENAME("index.txt") {}
 
     static Configs* config;

@@ -6,6 +6,7 @@
 #include <fstream>
 #include <string>
 #include <sstream>
+#include <queue>
 #include "Configs.h"
 #include "Triple.h"
 #include <dirent.h>
@@ -13,15 +14,17 @@
 
 class RunUtil {
 
-  struct {
-    const char *filename;
-    void (*operation)(ifstream&);
-  } filelist;
+/*  struct {
+    ifstream *file;
+    //void (*operation)(ifstream&);
+  } Filelist;*/
 
   public:
     RunUtil();
     void load();
     int get_runs(string& path, vector<string>& files);
+    void write_index();
+
 };
 
 #endif /* __RUN_UTIL_H__ */

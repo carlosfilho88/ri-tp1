@@ -29,11 +29,15 @@ cd src/ && make
 ## Parameters
 You can set these follow parameters to configure environment:
 
-- **_-rd_** to set run directory (default /var/tmp)
-- **_-rf_** to set run filetype (default .run)
-- **_-rs_** to set run size (default 256MB)
+- **_-rd_** to set run directory (default */var/tmp*)
+- **_-rf_** to set run filetype (default *.run*)
+- **_-rs_** to set run size (default *256MB*)
 - **_-id_** to set index directory (collection)
-- **_-if_** to set index filename
+- **_-if_** to set index filename (default */media/files*)
+- **_-od_** to set index output directory (default */media/files*)
+- **_-of_** to set index output filename (default *inverted_index.bin*)
+- **_-vd_** to set vocabulary output directory (default */media/files*)
+- **_-vf_** to set vocabulary output filename (default *vocabulary.bin*)
 
 ## Running an example
 ```bash

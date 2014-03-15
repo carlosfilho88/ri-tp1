@@ -88,7 +88,8 @@ void ParserUtil::read_collection() {
     //cin >> ch;
   }
   write_run();
-  cout << doc_num << ";" << doc_indexed << ";" << vocabulary.size() << endl;
+  write_vocabulary();
+  //cout << doc_num << ";" << doc_indexed << ";" << vocabulary.size() << endl;
 }
 
 /*void ParserUtil::extract_words(const string& str) {
@@ -205,7 +206,7 @@ void ParserUtil::write_run() {
     Inverted inv;
     stringstream filename;
     filename << config->RUN_DIRECTORY << config->RUN_NUM++ << config->RUN_FILETYPE;
-    cout << filename.str() << endl;
+    //cout << filename.str() << endl;
     file = fopen((filename.str()).c_str(), "wb+");
 
     if (file != NULL) {
@@ -230,3 +231,21 @@ void ParserUtil::flush() {
   if(buffer.size() >= buffer.capacity())
     write_run();
 } 
+
+void ParserUtil::write_vocabulary() {
+  Configs* config = Configs::createInstance();
+  FILE * file;
+  Inverted inv;
+  stringstream filename;
+  filename << config->VOCABULARY_DIRECTORY << config->VOCABULARY_FILENAME;
+  //cout << filename.str() << endl;
+  file = fopen((filename.str()).c_str(), "wb+");
+
+  if (file != NULL) {
+    for (auto i = vocabulary.begin(); i != vocabulary.end(); ++i)
+      fwrite((&i), 1, sizeof(i), file);
+    fclose(file);
+    vocabulary.clear();
+  }
+
+}

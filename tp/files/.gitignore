@@ -2,3 +2,6 @@ pagesRI0
 pagesRI1
 pagesRI2
 index.txt
+*.bin
+/stats
+/runs
