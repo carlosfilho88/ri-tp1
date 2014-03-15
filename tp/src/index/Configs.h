@@ -54,6 +54,7 @@ class Configs {
         else if(param == "-rd"){
           i++;
           RUN_DIRECTORY = string(argv[i]);
+          mkdir(RUN_DIRECTORY.c_str(), 0755);
         }
         else if(param == "-id"){
           i++;

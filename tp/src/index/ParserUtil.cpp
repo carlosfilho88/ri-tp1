@@ -20,7 +20,7 @@ void ParserUtil::read_collection() {
   char ch;
   doc.clear();
   buffer.reserve(config->run_size/sizeof(Inverted));
-  cout << "Capacity: " << buffer.capacity() << endl;
+  //cout << "Capacity: " << buffer.capacity() << endl;
 
   double tstart, tstop, ttime;
   while (cr->getNextDocument(doc)) {
