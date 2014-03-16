@@ -41,7 +41,7 @@ class Configs {
 
     void read_params(int argc, char** argv) {
       mkdir("/tmp/runs", 0755);
-      run_size = RUN_SIZE*100;
+      run_size = RUN_SIZE*1024*1024;
       RUN_NUM = 0;
 
       for(unsigned int i = 0; i < argc; ++i){
