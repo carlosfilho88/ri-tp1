@@ -1,18 +1,20 @@
 #include "RunUtil.h"
 
-  vector<Inverted> inv_buffer;
   priority_queue<RUN, vector<RUN>> pq;
   RUN r;
 
   RunUtil::RunUtil() {}
 
-  void RunUtil::load() {
+  void RunUtil::merge() {
     Configs* config = Configs::createInstance();
+    FILE * index_file;
+    stringstream filename;
+    filename << config->INDEX_OUTPUT_DIRECTORY << config->INDEX_OUTPUT_FILENAME;
+    index_file = fopen((filename.str()).c_str(), "wb+");
     const string ext = config->RUN_FILETYPE;
     vector<string> files;
     vector<ifstream *> open; 
     Inverted inv;
-    inv_buffer.clear();
 
     if(get_runs(config->RUN_DIRECTORY, files) == 0) {
 
@@ -25,25 +27,35 @@
         }
       }
 
-      //For each RUN, merge into a buffer (priority_queue) the same terms
+      //Initialize priority_queue with first element for each RUN
       for (auto i = 0; i < open.size(); ++i) {
         if (open[i]->is_open() && open[i]->good()) {
           open[i]->read(reinterpret_cast<char *>(&inv), sizeof(inv));
           r.inv = inv;
+          r.id_file = i;
           pq.push(r);
         }
       }
-
+      int count = 0;
+      //Merging RUNs
       while(!pq.empty()) {
         r = pq.top();
+        if (index_file != NULL)
+          fwrite((&r.inv), 1, sizeof(r.inv), index_file);
+      
         //cout << r.inv.id_term << "," << r.inv.doc_number << "," << r.inv.frequence << "," << r.inv.occurrence << endl;
         pq.pop();
         if (open[r.id_file]->is_open() && open[r.id_file]->good()) {
           open[r.id_file]->read(reinterpret_cast<char *>(&r.inv), sizeof(r.inv));
           pq.push(r);
         }
+        ++count;
       }
+      for (auto i = 0; i < open.size(); ++i) 
+        open[i]->close();
+    //cout << "----> " << count << " <----" << endl;
     }
+    fclose(index_file);
   } 
 
   int RunUtil::get_runs(string& dir, vector<string>& files) {
@@ -60,27 +72,21 @@
     return 0;
   }
 
-  void RunUtil::write_index() {
-    if(inv_buffer.size() > 0) {
-      Configs* config = Configs::createInstance();
-      FILE * file;
-      Inverted inv;
-      stringstream filename;
-      filename << config->INDEX_OUTPUT_DIRECTORY << config->INDEX_OUTPUT_FILENAME;
-      //cout << filename.str() << endl;
-      file = fopen((filename.str()).c_str(), "wb+");
-
-      if (file != NULL) {
-        sort(inv_buffer.begin(), inv_buffer.end(), inv);
-        for (auto i = 0; i < inv_buffer.size(); ++i){
-          cout << inv_buffer[i].id_term << "," << inv_buffer[i].doc_number << "," << inv_buffer[i].frequence << "," << inv_buffer[i].occurrence << endl;
-          fwrite((&inv_buffer[i]), 1, sizeof(inv_buffer[i]), file);
-        }
-        fclose(file);
-        inv_buffer.clear();
+  void RunUtil::load_index() {
+    Configs* config = Configs::createInstance();
+    Inverted inv;
+    stringstream filename;
+    filename << config->INDEX_OUTPUT_DIRECTORY << config->INDEX_OUTPUT_FILENAME;
+    ifstream index(filename.str(), ios::binary);
+    int count = 0;
+    if(index.is_open()){
+      while(index.good()){
+        ++count;
+        index.read(reinterpret_cast<char *>(&inv), sizeof(inv));
+        //cout << inv.id_term << "," << inv.doc_number << "," << inv.frequence << "," << inv.occurrence << endl;
       }
+      index.close();
+      //cout << count << endl;
     }
-    /*  for (auto i = 0; i < inv_buffer.size(); ++i)
-      cout << inv_buffer[i].id_term << "," << inv_buffer[i].doc_number << "," << inv_buffer[i].frequence << "," << inv_buffer[i].occurrence << endl;
-      cout << "End inv_buffer" << endl;*/
-} 
+
+  }

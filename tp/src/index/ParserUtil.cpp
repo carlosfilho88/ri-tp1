@@ -22,6 +22,8 @@ void ParserUtil::read_collection() {
   buffer.reserve(config->run_size/sizeof(Inverted));
   //cout << "Capacity: " << buffer.capacity() << endl;
 
+  int num_terms = 0;
+
   double tstart, tstop, ttime;
   while (cr->getNextDocument(doc)) {
     tstart = (double)clock();
@@ -65,6 +67,7 @@ void ParserUtil::read_collection() {
                 flush();
               }
             }
+            num_terms += terms.size();
             frequences.clear();
             triples.clear();
             terms.clear();
@@ -84,12 +87,11 @@ void ParserUtil::read_collection() {
       ttime = 0;
     }
     doc_num++;
-    
     //cin >> ch;
   }
   write_run();
   write_vocabulary();
-  //cout << doc_num << ";" << doc_indexed << ";" << vocabulary.size() << endl;
+  cout << doc_num << ";" << doc_indexed << ";" << vocabulary.size() << ";" << num_terms << endl;
 }
 
 /*void ParserUtil::extract_words(const string& str) {

@@ -14,11 +14,12 @@ int main(int argc, char** argv) {
   double tstart, tstop, ttime;
   tstart = (double)clock();
   
-  //ParserUtil parser;
-  //parser.read_collection();
+  ParserUtil parser;
+  parser.read_collection();
 
   RunUtil run;
-  run.load();
+  run.merge();
+  run.load_index();
 
   tstop = (double)clock();
   ttime = (double)(tstop-tstart)/CLOCKS_PER_SEC;

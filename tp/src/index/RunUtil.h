@@ -21,9 +21,9 @@ class RunUtil {
 
   public:
     RunUtil();
-    void load();
+    void merge();
+    void load_index();
     int get_runs(string& path, vector<string>& files);
-    void write_index();
 
 };
 
