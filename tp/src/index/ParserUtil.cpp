@@ -235,7 +235,6 @@ void ParserUtil::flush() {
 void ParserUtil::write_vocabulary() {
   Configs* config = Configs::createInstance();
   FILE * file;
-  Inverted inv;
   stringstream filename;
   filename << config->VOCABULARY_DIRECTORY << config->VOCABULARY_FILENAME;
   //cout << filename.str() << endl;
@@ -247,5 +246,16 @@ void ParserUtil::write_vocabulary() {
     fclose(file);
     vocabulary.clear();
   }
-
 }
+
+/*void ParserUtil::read_vocabulary() {
+  Configs* config = Configs::createInstance();
+  stringstream filename;
+  filename << config->VOCABULARY_DIRECTORY << config->VOCABULARY_FILENAME;
+  ifstream voc(filename.str(), ios::binary);
+
+  if (voc.is_open())
+    voc.read(reinterpret_cast<char *>(&vocabulary), sizeof(vocabulary));
+  voc.close();
+  }
+}*/

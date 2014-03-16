@@ -7,7 +7,7 @@ struct Inverted {
   unsigned int doc_number;
   unsigned int frequence;
   unsigned int occurrence;
-  bool operator () (const Inverted &a, const Inverted &b) {
+  bool operator()(const Inverted &a, const Inverted &b) {
     if(a.id_term < b.id_term)
       return true;
     if(a.id_term > b.id_term)
@@ -16,8 +16,24 @@ struct Inverted {
       return true;
     if(a.doc_number > b.doc_number)
       return false;
-  }
+  };
+
 };
+
+typedef struct RUN {
+  Inverted inv;
+  unsigned int id_file;
+  bool operator<(const RUN &r) const {
+    if(inv.id_term < r.inv.id_term)
+      return false;
+    if(inv.id_term > r.inv.id_term)
+      return true;
+    if(inv.doc_number < r.inv.doc_number)
+      return false;
+    if(inv.doc_number > r.inv.doc_number)
+      return true;
+  }
+} RUN;
 
 class Triple {
 

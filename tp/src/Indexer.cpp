@@ -14,8 +14,8 @@ int main(int argc, char** argv) {
   double tstart, tstop, ttime;
   tstart = (double)clock();
   
-  ParserUtil parser;
-  parser.read_collection();
+  //ParserUtil parser;
+  //parser.read_collection();
 
   RunUtil run;
   run.load();
