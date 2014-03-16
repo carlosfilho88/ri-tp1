@@ -48,12 +48,14 @@ bool CollectionReader::getNextDocument(Document & doc) {
 	char url[MAX_STRING_SIZE], inputContentFileName[MAX_STRING_SIZE];
 	size_t beginOffset = 0, endOffset = 0, uncompressedPageSize = 0;
 	
-	fscanf(inputIndexFilePtr_, "%s %s %lu %lu %lu",
+	if(fscanf(inputIndexFilePtr_, "%s %s %lu %lu %lu",
 				 url,
 				 inputContentFileName,
 				 &beginOffset,
 				 &endOffset,
-				 &uncompressedPageSize);
+				 &uncompressedPageSize) != 5){
+		return false;
+	}
 
 	string tmpContentFileName;
 	if(inputContentFileName_ == "") { // Reading first line in index
@@ -76,8 +78,8 @@ bool CollectionReader::getNextDocument(Document & doc) {
 
 		inputContentFileName_ = tmpContentFileName;
 		inputContentFilePtr_  = fopen(inputContentFileName_.c_str(), "r");
-		//assert(inputContentFilePtr_ != NULL);
-		return false;
+		assert(inputContentFilePtr_ != NULL);
+
 		if(DEBUG) { cerr << "File [" << inputContentFileName_ << "] openned." << endl;  }
 
 		cerr << "begin [" << beginOffset << "] end[" << endOffset << "]" << endl;
