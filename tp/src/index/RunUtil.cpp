@@ -36,24 +36,23 @@
           pq.push(r);
         }
       }
-      int count = 0;
+
       //Merging RUNs
       while(!pq.empty()) {
         r = pq.top();
         if (index_file != NULL)
           fwrite((&r.inv), 1, sizeof(r.inv), index_file);
-      
-        //cout << r.inv.id_term << "," << r.inv.doc_number << "," << r.inv.frequence << "," << r.inv.occurrence << endl;
+        
         pq.pop();
         if (open[r.id_file]->is_open() && open[r.id_file]->good()) {
           open[r.id_file]->read(reinterpret_cast<char *>(&r.inv), sizeof(r.inv));
           pq.push(r);
-        }
-        ++count;
+        } /*else {
+          cout << "->" << r.inv.id_term << "," << r.inv.doc_number << "," << r.inv.frequence << "," << r.inv.occurrence << endl;
+        }*/
       }
       for (auto i = 0; i < open.size(); ++i) 
         open[i]->close();
-    //cout << "----> " << count << " <----" << endl;
     }
     fclose(index_file);
   } 
@@ -83,10 +82,9 @@
       while(index.good()){
         ++count;
         index.read(reinterpret_cast<char *>(&inv), sizeof(inv));
-        //cout << inv.id_term << "," << inv.doc_number << "," << inv.frequence << "," << inv.occurrence << endl;
+        cout << inv.id_term << "," << inv.doc_number << "," << inv.frequence << "," << inv.occurrence << endl;
       }
       index.close();
-      //cout << count << endl;
+      cout << count << endl;
     }
-
   }

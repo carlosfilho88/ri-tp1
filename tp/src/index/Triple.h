@@ -32,7 +32,25 @@ typedef struct RUN {
       return false;
     if(inv.doc_number > r.inv.doc_number)
       return true;
-  }
+  };
+  bool operator!=(const RUN &r) const {
+    if(inv.id_term != r.inv.id_term
+      && inv.doc_number != r.inv.doc_number
+      && inv.frequence != r.inv.frequence
+      && inv.occurrence != r.inv.occurrence)
+      return false;
+    else
+      return true;
+  };
+  bool operator==(const RUN &r) const {
+    if(inv.id_term == r.inv.id_term
+      && inv.doc_number == r.inv.doc_number
+      && inv.frequence == r.inv.frequence
+      && inv.occurrence == r.inv.occurrence)
+      return true;
+    else
+      return false;
+  };
 } RUN;
 
 class Triple {

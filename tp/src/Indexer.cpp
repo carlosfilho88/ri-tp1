@@ -19,7 +19,7 @@ int main(int argc, char** argv) {
 
   RunUtil run;
   run.merge();
-  run.load_index();
+  //run.load_index();
 
   tstop = (double)clock();
   ttime = (double)(tstop-tstart)/CLOCKS_PER_SEC;
