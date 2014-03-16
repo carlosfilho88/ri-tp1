@@ -92,8 +92,8 @@ class Configs {
                   RUN_FILETYPE(".run"), 
                   RUN_DIRECTORY("/tmp/runs/"), 
                   INPUT_DIRECTORY("/media/files"), 
-                  INDEX_OUTPUT_DIRECTORY("/media/files"), 
-                  VOCABULARY_DIRECTORY("/media/files"), 
+                  INDEX_OUTPUT_DIRECTORY("/media/files/"), 
+                  VOCABULARY_DIRECTORY("/media/files/"), 
                   INDEX_OUTPUT_FILENAME("inverted_index.bin"), 
                   VOCABULARY_FILENAME("vocabulary.bin"), 
                   INDEX_FILENAME("index.txt") {}
