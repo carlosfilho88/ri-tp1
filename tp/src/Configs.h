@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 #include <sys/stat.h>
-#include "Triple.h"
+#include "index/Triple.h"
 
 using namespace std;
 
@@ -30,7 +30,7 @@ class Configs {
     string RUN_FILETYPE;
     string RUN_DIRECTORY;
     string INPUT_DIRECTORY;
-    string INDEX_FILENAME;
+    string INPUT_FILENAME;
     string INDEX_OUTPUT_FILENAME;
     string INDEX_OUTPUT_DIRECTORY;
     string VOCABULARY_DIRECTORY;
@@ -38,10 +38,11 @@ class Configs {
     unsigned int RUN_NUM;
     unsigned int run_size;
     vector<unsigned int> runs;
+    unordered_map<string, unsigned int> vocabulary;
 
     void read_params(int argc, char** argv) {
       mkdir("/tmp/runs", 0755);
-      run_size = RUN_SIZE*1024*1024;
+      run_size = RUN_SIZE*100;
       RUN_NUM = 0;
 
       for(unsigned int i = 0; i < argc; ++i){
@@ -66,7 +67,7 @@ class Configs {
         }
         else if(param == "-if"){
           i++;
-          INDEX_FILENAME = string(argv[i]);
+          INPUT_FILENAME = string(argv[i]);
         }
         else if(param == "-od"){
           i++;
@@ -91,12 +92,12 @@ class Configs {
       Configs() : FILENAME(""), 
                   RUN_FILETYPE(".run"), 
                   RUN_DIRECTORY("/tmp/runs/"), 
-                  INPUT_DIRECTORY("/media/files"), 
-                  INDEX_OUTPUT_DIRECTORY("/media/files/"), 
                   VOCABULARY_DIRECTORY("/media/files/"), 
-                  INDEX_OUTPUT_FILENAME("inverted_index.bin"), 
                   VOCABULARY_FILENAME("vocabulary.bin"), 
-                  INDEX_FILENAME("index.txt") {}
+                  INDEX_OUTPUT_DIRECTORY("/media/files/"), 
+                  INDEX_OUTPUT_FILENAME("inverted_index.bin"), 
+                  INPUT_DIRECTORY("/media/files"), 
+                  INPUT_FILENAME("index.txt") {}
 
     static Configs* config;
 

@@ -7,7 +7,7 @@ ParserUtil::ParserUtil() : num_words(1) {}
 
 void ParserUtil::read_collection() {
   Configs* config = Configs::createInstance();
-  CollectionReader* cr = new CollectionReader(config->INPUT_DIRECTORY, config->INDEX_FILENAME);
+  CollectionReader* cr = new CollectionReader(config->INPUT_DIRECTORY, config->INPUT_FILENAME);
   Document doc;
   GumboOutput* output;
   size_t begin;
@@ -44,10 +44,10 @@ void ParserUtil::read_collection() {
 
           if(terms.size() > 0) {
             for(auto i = terms.begin(); i != terms.end(); ++i) {
-              unsigned int& id_term = vocabulary[*i];
+              unsigned int& id_term = config->vocabulary[*i];
 
               if (id_term == 0) {
-                vocabulary[*i] = num_words;
+                config->vocabulary[*i] = num_words;
                 triples.emplace_back(Triple(num_words, doc_num, word_position));
                 frequences[num_words].push_back(word_position);
                 num_words++;
@@ -83,7 +83,7 @@ void ParserUtil::read_collection() {
     ttime += (double)(tstop-tstart)/CLOCKS_PER_SEC;
 
     if(doc_num % 1000 == 0) {
-      cout << doc_num << ";" << doc_indexed << ";" << vocabulary.size() << ";" << ttime << endl;
+      cout << doc_num << ";" << doc_indexed << ";" << config->vocabulary.size() << ";" << ttime << endl;
       ttime = 0;
     }
     doc_num++;
@@ -91,7 +91,7 @@ void ParserUtil::read_collection() {
   }
   write_run();
   write_vocabulary();
-  cout << doc_num << ";" << doc_indexed << ";" << vocabulary.size() << ";" << num_terms << endl;
+  cout << doc_num << ";" << doc_indexed << ";" << config->vocabulary.size() << ";" << num_terms << endl;
 }
 
 /*void ParserUtil::extract_words(const string& str) {
@@ -243,10 +243,10 @@ void ParserUtil::write_vocabulary() {
   file = fopen((filename.str()).c_str(), "wb+");
 
   if (file != NULL) {
-    for (auto i = vocabulary.begin(); i != vocabulary.end(); ++i)
+    for (auto i = config->vocabulary.begin(); i != config->vocabulary.end(); ++i)
       fwrite((&i), 1, sizeof(i), file);
     fclose(file);
-    vocabulary.clear();
+    config->vocabulary.clear();
   }
 }
 

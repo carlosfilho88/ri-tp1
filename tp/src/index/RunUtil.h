@@ -4,10 +4,11 @@
 #include <ios>
 #include <iostream>
 #include <fstream>
+#include <unordered_map>
 #include <string>
 #include <sstream>
 #include <queue>
-#include "Configs.h"
+#include "../Configs.h"
 #include "Triple.h"
 #include <dirent.h>
 #include <errno.h>
@@ -22,7 +23,6 @@ class RunUtil {
   public:
     RunUtil();
     void merge();
-    void load_index();
     int get_runs(string& path, vector<string>& files);
 
 };

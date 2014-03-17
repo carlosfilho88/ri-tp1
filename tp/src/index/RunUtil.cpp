@@ -1,6 +1,7 @@
 #include "RunUtil.h"
 
   priority_queue<RUN, vector<RUN>> pq;
+  unordered_map<int, unsigned long> offset;
   RUN r;
 
   RunUtil::RunUtil() {}
@@ -15,6 +16,8 @@
     vector<string> files;
     vector<ifstream *> open; 
     Inverted inv;
+    int position = -1;
+    unsigned long current_position = 0;
 
     if(get_runs(config->RUN_DIRECTORY, files) == 0) {
 
@@ -40,6 +43,12 @@
       //Merging RUNs
       while(!pq.empty()) {
         r = pq.top();
+        if(position != r.inv.id_term) {
+          position = r.inv.id_term;
+          current_position = ftell(index_file);
+          offset[position] = current_position;
+        }
+
         if (index_file != NULL)
           fwrite((&r.inv), 1, sizeof(r.inv), index_file);
         
@@ -51,8 +60,15 @@
           cout << "->" << r.inv.id_term << "," << r.inv.doc_number << "," << r.inv.frequence << "," << r.inv.occurrence << endl;
         }*/
       }
+
       for (auto i = 0; i < open.size(); ++i) 
         open[i]->close();
+      
+      for (auto i = config->vocabulary.begin(); i != config->vocabulary.end(); ++i) {
+        i->second = offset[i->second];
+        cout << i->first << ";" << i->second << endl;
+      }
+
     }
     fclose(index_file);
   } 
@@ -69,22 +85,4 @@
     }
     closedir(dp);
     return 0;
-  }
-
-  void RunUtil::load_index() {
-    Configs* config = Configs::createInstance();
-    Inverted inv;
-    stringstream filename;
-    filename << config->INDEX_OUTPUT_DIRECTORY << config->INDEX_OUTPUT_FILENAME;
-    ifstream index(filename.str(), ios::binary);
-    int count = 0;
-    if(index.is_open()){
-      while(index.good()){
-        ++count;
-        index.read(reinterpret_cast<char *>(&inv), sizeof(inv));
-        cout << inv.id_term << "," << inv.doc_number << "," << inv.frequence << "," << inv.occurrence << endl;
-      }
-      index.close();
-      cout << count << endl;
-    }
   }

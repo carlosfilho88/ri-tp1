@@ -16,7 +16,7 @@
 #include <unicode/translit.h>
 #include <unicode/brkiter.h>
 #include <unicode/uniset.h>
-#include "Configs.h"
+#include "../Configs.h"
 #include "gumbo.h"
 #include "Triple.h"
 
@@ -26,7 +26,6 @@ using namespace RICPNS;
 class ParserUtil {
 
   string content;
-  unordered_map<string, unsigned int> vocabulary;
   unsigned int num_words;
   
   public:

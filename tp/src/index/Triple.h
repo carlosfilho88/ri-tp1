@@ -1,77 +1,78 @@
 #ifndef __TRIPLE_H__
 #define __TRIPLE_H__
-#include <algorithm> 
+#include <algorithm>
+#include <unordered_map>
+#include <string>
 
-struct Inverted {
-  unsigned int id_term;
-  unsigned int doc_number;
-  unsigned int frequence;
-  unsigned int occurrence;
-  bool operator()(const Inverted &a, const Inverted &b) {
-    if(a.id_term < b.id_term)
-      return true;
-    if(a.id_term > b.id_term)
-      return false;
-    if(a.doc_number < b.doc_number)
-      return true;
-    if(a.doc_number > b.doc_number)
-      return false;
-  };
-
-};
-
-typedef struct RUN {
-  Inverted inv;
-  unsigned int id_file;
-  bool operator<(const RUN &r) const {
-    if(inv.id_term < r.inv.id_term)
-      return false;
-    if(inv.id_term > r.inv.id_term)
-      return true;
-    if(inv.doc_number < r.inv.doc_number)
-      return false;
-    if(inv.doc_number > r.inv.doc_number)
-      return true;
-  };
-  bool operator!=(const RUN &r) const {
-    if(inv.id_term != r.inv.id_term
-      && inv.doc_number != r.inv.doc_number
-      && inv.frequence != r.inv.frequence
-      && inv.occurrence != r.inv.occurrence)
-      return false;
-    else
-      return true;
-  };
-  bool operator==(const RUN &r) const {
-    if(inv.id_term == r.inv.id_term
-      && inv.doc_number == r.inv.doc_number
-      && inv.frequence == r.inv.frequence
-      && inv.occurrence == r.inv.occurrence)
-      return true;
-    else
-      return false;
-  };
-} RUN;
-
-class Triple {
-
-  public:
+  struct Inverted {
     unsigned int id_term;
     unsigned int doc_number;
+    unsigned int frequence;
     unsigned int occurrence;
+    bool operator()(const Inverted &a, const Inverted &b) {
+      if(a.id_term < b.id_term)
+        return true;
+      if(a.id_term > b.id_term)
+        return false;
+      if(a.doc_number < b.doc_number)
+        return true;
+      if(a.doc_number > b.doc_number)
+        return false;
+    };
+  };
 
-    Triple() {}
+  typedef struct RUN {
+    Inverted inv;
+    unsigned int id_file;
+    bool operator<(const RUN &r) const {
+      if(inv.id_term < r.inv.id_term)
+        return false;
+      if(inv.id_term > r.inv.id_term)
+        return true;
+      if(inv.doc_number < r.inv.doc_number)
+        return false;
+      if(inv.doc_number > r.inv.doc_number)
+        return true;
+    };
+    bool operator!=(const RUN &r) const {
+      if(inv.id_term != r.inv.id_term
+        && inv.doc_number != r.inv.doc_number
+        && inv.frequence != r.inv.frequence
+        && inv.occurrence != r.inv.occurrence)
+        return false;
+      else
+        return true;
+    };
+    bool operator==(const RUN &r) const {
+      if(inv.id_term == r.inv.id_term
+        && inv.doc_number == r.inv.doc_number
+        && inv.frequence == r.inv.frequence
+        && inv.occurrence == r.inv.occurrence)
+        return true;
+      else
+        return false;
+    };
+  } RUN;
 
-    Triple(unsigned int id, unsigned int doc) {
-      id_term = id; 
-      doc_number = doc;
-    }
+  class Triple {
 
-    Triple(unsigned int id, unsigned int doc, unsigned int occ) {
-      id_term = id;
-      doc_number = doc;
-      occurrence = occ;
-    }
-};
+    public:
+      unsigned int id_term;
+      unsigned int doc_number;
+      unsigned int occurrence;
+
+      Triple() {}
+
+      Triple(unsigned int id, unsigned int doc) {
+        id_term = id; 
+        doc_number = doc;
+      }
+
+      Triple(unsigned int id, unsigned int doc, unsigned int occ) {
+        id_term = id;
+        doc_number = doc;
+        occurrence = occ;
+      }
+  };
 
 #endif /* __TRIPLE_H__ */
