@@ -25,15 +25,14 @@
     Inverted inv;
     stringstream filename;
     filename << config->VOCABULARY_DIRECTORY << config->VOCABULARY_FILENAME;
-    ifstream index(filename.str(), ios::binary);
+    ifstream voc(filename.str(), ios::in);
 
-    if(index.is_open()) {
-      while(index.good()) {
-        index.read(reinterpret_cast<char *>(&config->vocabulary), sizeof(config->vocabulary));
-      }
-      index.close();
+    if(voc.is_open()) {
+      string word;
+      unsigned int key;
+
+      while (voc >> word >> key)
+        config->vocabulary[word] = key;
+      voc.close();
     }
-    cout << config->vocabulary.size() << endl;
-    for(auto i = config->vocabulary.begin(); i != config->vocabulary.end(); ++i)
-      cout << i->first << endl;
   }

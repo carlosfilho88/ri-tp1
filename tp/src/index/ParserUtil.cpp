@@ -189,12 +189,12 @@ vector<string> ParserUtil::extract_terms(string& str) {
   vector<string> terms;
   char * dup = strdup(str.c_str());
   char * word;
-  word = strtok(dup," ,.!?():\"'@#$&*;|\\^~}{[]<>¹²³³£¢¬+_-=/\n\r");
+  word = strtok(dup," ´`·,.!?():\"'@#$&*;|\\^~}{[]<>¹²³³£¢¬+_-=/%\n\r\t\b");
   //if(word != NULL)
   //  terms.push_back(word);
   while (word != NULL) {
     terms.push_back(word);
-    word = strtok(NULL, " ,.!?():\"'@#$&*;|\\^~}{[]<>¹²³³£¢¬+_-=/\n\r");
+    word = strtok(NULL, " ´`·,.!?():\"'@#$&*;|\\^~}{[]<>¹²³³£¢¬+_-=/%\n\r\t\b");
   }
   free(word);
   free(dup);
@@ -234,7 +234,7 @@ void ParserUtil::flush() {
     write_run();
 } 
 
-void ParserUtil::write_vocabulary() {
+/*void ParserUtil::write_vocabulary() {
   Configs* config = Configs::createInstance();
   FILE * file;
   stringstream filename;
@@ -248,16 +248,18 @@ void ParserUtil::write_vocabulary() {
     fclose(file);
     config->vocabulary.clear();
   }
-}
+}*/
 
-/*void ParserUtil::read_vocabulary() {
+void ParserUtil::write_vocabulary() {
   Configs* config = Configs::createInstance();
   stringstream filename;
   filename << config->VOCABULARY_DIRECTORY << config->VOCABULARY_FILENAME;
-  ifstream voc(filename.str(), ios::binary);
 
-  if (voc.is_open())
-    voc.read(reinterpret_cast<char *>(&vocabulary), sizeof(vocabulary));
-  voc.close();
+  ofstream file(filename.str(), ofstream::out);
+  if(file.is_open()) {
+    for(auto i = config->vocabulary.begin(); i != config->vocabulary.end(); ++i)
+      file << i->first << "\t" << i->second << endl;
+    file.close();
+    config->vocabulary.clear();
   }
-}*/
+}
