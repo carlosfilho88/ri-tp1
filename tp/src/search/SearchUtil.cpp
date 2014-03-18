@@ -36,3 +36,7 @@
       voc.close();
     }
   }
+
+  void SearchUtil::find(const string& word) {
+    Configs* config = Configs::createInstance();
+  }

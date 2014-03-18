@@ -234,22 +234,6 @@ void ParserUtil::flush() {
     write_run();
 } 
 
-/*void ParserUtil::write_vocabulary() {
-  Configs* config = Configs::createInstance();
-  FILE * file;
-  stringstream filename;
-  filename << config->VOCABULARY_DIRECTORY << config->VOCABULARY_FILENAME;
-  //cout << filename.str() << endl;
-  file = fopen((filename.str()).c_str(), "wb+");
-
-  if (file != NULL) {
-    for (auto i = config->vocabulary.begin(); i != config->vocabulary.end(); ++i)
-      fwrite((&i), 1, sizeof(i), file);
-    fclose(file);
-    config->vocabulary.clear();
-  }
-}*/
-
 void ParserUtil::write_vocabulary() {
   Configs* config = Configs::createInstance();
   stringstream filename;

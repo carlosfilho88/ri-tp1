@@ -12,15 +12,11 @@
 
 class SearchUtil {
 
-/*  struct {
-    ifstream *file;
-    //void (*operation)(ifstream&);
-  } Filelist;*/
-
   public:
     SearchUtil();
     void load_index();
     void load_vocabulary();
+    void find(const string& word);
 
 };
 
