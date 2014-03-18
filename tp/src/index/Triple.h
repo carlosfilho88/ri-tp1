@@ -22,10 +22,9 @@
   };
 
   struct InvertedIndex {
-    unsigned int id_term;
     unsigned int doc_number;
     unsigned int frequence;
-    vector<unsigned int> occurrences;
+    unsigned int occurrence;
   };
 
   typedef struct RUN {

@@ -16,7 +16,8 @@
     vector<string> files;
     vector<ifstream *> open; 
     Inverted inv;
-    int position = -1;
+    int current_term = -1;
+    int current_doc = -1;
     unsigned long current_position = 0;
 
     if(get_runs(config->RUN_DIRECTORY, files) == 0) {
@@ -40,17 +41,28 @@
         }
       }
 
+      unsigned int term_frequence = 0;
       //Merging RUNs
       while(!pq.empty()) {
         r = pq.top();
-        if(position != r.inv.id_term) {
-          position = r.inv.id_term;
+        if(current_term != r.inv.id_term) {
+          current_term = r.inv.id_term;
+          current_doc = r.inv.doc_number;
           current_position = ftell(index_file);
-          offset[position] = current_position;
+          offset[current_position] = current_position;
+          fwrite((&r.inv.doc_number), 1, sizeof(r.inv.doc_number), index_file);
+          fwrite((&r.inv.frequence), 1, sizeof(r.inv.frequence), index_file);
+          fwrite((&r.inv.occurrence), 1, sizeof(r.inv.occurrence), index_file);
+        } else if (current_term == r.inv.id_term && current_doc != r.inv.doc_number) {
+          ++term_frequence;
+          current_doc = r.inv.doc_number;
+          fwrite((&r.inv.doc_number), 1, sizeof(r.inv.doc_number), index_file);
+          fwrite((&r.inv.frequence), 1, sizeof(r.inv.frequence), index_file);
+          fwrite((&r.inv.occurrence), 1, sizeof(r.inv.occurrence), index_file);
+        } else if(r.inv.id_term == current_term && r.inv.doc_number == current_doc) {
+          ++term_frequence;
+          fwrite((&r.inv.occurrence), 1, sizeof(r.inv.occurrence), index_file);
         }
-
-        if (index_file != NULL)
-          fwrite((&r.inv), 1, sizeof(r.inv), index_file);
         
         pq.pop();
         if (open[r.id_file]->is_open() && open[r.id_file]->good()) {

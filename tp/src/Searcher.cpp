@@ -14,7 +14,7 @@ int main(int argc, char** argv) {
   tstart = (double)clock();
   
   SearchUtil search;
-  search.load_index();
+  //search.load_index();
   
   tstop = (double)clock();
   ttime = (double)(tstop-tstart)/CLOCKS_PER_SEC;
