@@ -241,9 +241,9 @@ void ParserUtil::write_vocabulary() {
 
   ofstream file(filename.str(), ofstream::out);
   if(file.is_open()) {
-    for(auto i = config->vocabulary.begin(); i != config->vocabulary.end(); ++i)
+    for(auto i = config->vocabulary_p.begin(); i != config->vocabulary_p.end(); ++i)
       file << i->first << "\t" << i->second << endl;
     file.close();
-    config->vocabulary.clear();
+    
   }
 }

@@ -1,7 +1,7 @@
 #include "RunUtil.h"
 
   priority_queue<RUN, vector<RUN>> pq;
-  unordered_map<int, unsigned long> offset;
+  unordered_map<unsigned int, unsigned long> offset;
   RUN r;
 
   RunUtil::RunUtil() {}
@@ -42,6 +42,7 @@
       }
 
       unsigned int term_frequence = 0;
+      int markdown = 0;
       //Merging RUNs
       while(!pq.empty()) {
         r = pq.top();
@@ -49,7 +50,10 @@
           current_term = r.inv.id_term;
           current_doc = r.inv.doc_number;
           current_position = ftell(index_file);
-          offset[current_position] = current_position;
+          offset[current_term] = current_position+1;
+          markdown = -(int)(r.inv.id_term);
+          //cout << markdown << endl;
+          fwrite((&markdown), 1, sizeof(markdown), index_file);
           fwrite((&r.inv.doc_number), 1, sizeof(r.inv.doc_number), index_file);
           fwrite((&r.inv.frequence), 1, sizeof(r.inv.frequence), index_file);
           fwrite((&r.inv.occurrence), 1, sizeof(r.inv.occurrence), index_file);
@@ -76,10 +80,8 @@
       for (auto i = 0; i < open.size(); ++i) 
         open[i]->close();
       
-      for (auto i = config->vocabulary.begin(); i != config->vocabulary.end(); ++i) {
-        i->second = offset[i->second];
-        cout << i->first << ";" << i->second << endl;
-      }
+      for (auto i = config->vocabulary.begin(); i != config->vocabulary.end(); ++i)
+        config->vocabulary_p[i->first] = offset[i->second];
 
     }
     fclose(index_file);

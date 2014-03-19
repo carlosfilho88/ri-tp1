@@ -22,8 +22,8 @@ int main(int argc, char** argv) {
   run.merge();
 
   SearchUtil search;
+  search.load_vocabulary();
   search.load_index();
-  //earch.load_vocabulary();
   
   tstop = (double)clock();
   ttime = (double)(tstop-tstart)/CLOCKS_PER_SEC;

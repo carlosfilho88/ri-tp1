@@ -10,27 +10,44 @@
     ifstream index(filename.str(), ios::binary);
     int count = 0;
 
-    unsigned int doc_number = 0;
+    int id_term = 0;
+    int doc_number = 0;
     unsigned int frequence = 0;
     unsigned int occurrence = 0;
     vector<unsigned int> occurrences;
-    if(index.is_open()) {
-      while(index.good()) {
-        ++count;
-        index.read(reinterpret_cast<char *>(&doc_number), sizeof(doc_number));
-        index.read(reinterpret_cast<char *>(&frequence), sizeof(frequence));
-        cout << doc_number << "," << frequence << "[";
-        for (int i = 0; i < frequence; ++i) {
-          index.read(reinterpret_cast<char *>(&occurrence), sizeof(occurrence));
-          if (i == frequence-1)
-            cout << occurrence;
-          else
-            cout << occurrence << ",";
-        }
-      cout << "]" << endl;
 
+    unsigned long position = config->vocabulary_p["home"];
+    //cout << "*** " << position << " ***" << endl;
+
+    if(position > 0) {
+      if(index.is_open()) {
+        index.seekg(position-1);
+        if(index.good()) {
+          index.read(reinterpret_cast<char *>(&id_term), sizeof(id_term));
+          cout << id_term << endl;
+          while(index.good()) {
+            ++count;
+            index.read(reinterpret_cast<char *>(&doc_number), sizeof(doc_number));
+            if(doc_number > 0) {
+              index.read(reinterpret_cast<char *>(&frequence), sizeof(frequence));
+              cout << doc_number << "," << frequence << "[";
+              for (int i = 0; i < frequence; ++i) {
+                index.read(reinterpret_cast<char *>(&occurrence), sizeof(occurrence));
+                if (i == frequence-1)
+                  cout << occurrence;
+                else
+                  cout << occurrence << ",";
+              }
+              cout << "]" << endl;
+            } else {
+              break;
+            }
+          }
+        }
+        index.close();
       }
-      index.close();
+    } else {
+      cout << "Not found" << endl;
     }
   }
 
@@ -43,11 +60,13 @@
 
     if(voc.is_open()) {
       string word;
-      unsigned int key;
+      unsigned long key;
 
       while (voc >> word >> key)
-        config->vocabulary[word] = key;
+        config->vocabulary_p[word] = key;
       voc.close();
+      /*for (auto i = config->vocabulary_p.begin(); i != config->vocabulary_p.end(); ++i)
+        cout << i->first << ", " << i->second << endl;*/
     }
   }
 

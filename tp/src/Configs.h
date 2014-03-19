@@ -39,6 +39,7 @@ class Configs {
     unsigned int run_size;
     vector<unsigned int> runs;
     unordered_map<string, unsigned int> vocabulary;
+    unordered_map<string, unsigned long> vocabulary_p;
 
     void read_params(int argc, char** argv) {
       mkdir("/tmp/runs", 0755);
