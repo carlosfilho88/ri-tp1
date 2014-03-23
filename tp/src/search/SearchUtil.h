@@ -14,9 +14,8 @@ class SearchUtil {
 
   public:
     SearchUtil();
-    void load_index();
     void load_vocabulary();
-    void find(const string& word);
+    IndexSearch find(const string& query);
 
 };
 

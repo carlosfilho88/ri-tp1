@@ -12,8 +12,8 @@ int main(int argc, char** argv) {
   Configs* config = Configs::createInstance();
   config->read_params(argc, argv);
 
-  double tstart, tstop, ttime;
-  tstart = (double)clock();
+  float tstart, tstop, ttime;
+  tstart = (float)clock();
   
   ParserUtil parser;
   parser.read_collection();
@@ -21,11 +21,7 @@ int main(int argc, char** argv) {
   RunUtil run;
   run.merge();
 
-  SearchUtil search;
-  search.load_vocabulary();
-  search.load_index();
-  
-  tstop = (double)clock();
-  ttime = (double)(tstop-tstart)/CLOCKS_PER_SEC;
-  cout << endl << "***" << ttime << " second(s)." << "***" << endl;
+  tstop = (float)clock();
+  ttime = (float)(tstop-tstart)/CLOCKS_PER_SEC;
+  cout << endl << "*** Total time: " << ttime << " second(s)" << "***" << endl;
 }

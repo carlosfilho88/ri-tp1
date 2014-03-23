@@ -39,8 +39,6 @@ class ParserUtil {
     vector<string> extract_terms(string&);
     void flush();
     void write_run();
-    void read_vocabulary();
-    void write_vocabulary();
 
 };
 

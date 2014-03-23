@@ -2,21 +2,21 @@
 
   SearchUtil::SearchUtil() {}
 
-  void SearchUtil::load_index() {
+  IndexSearch SearchUtil::find(const string& query) {
     Configs* config = Configs::createInstance();
-    Inverted inv;
     stringstream filename;
     filename << config->INDEX_OUTPUT_DIRECTORY << config->INDEX_OUTPUT_FILENAME;
     ifstream index(filename.str(), ios::binary);
-    int count = 0;
-
+    unsigned int count = 0;
     int id_term = 0;
     int doc_number = 0;
     unsigned int frequence = 0;
     unsigned int occurrence = 0;
-    vector<unsigned int> occurrences;
+    IndexSearch is;
 
-    unsigned long position = config->vocabulary_p["home"];
+    //cout << config->vocabulary_p.size() << endl;
+
+    unsigned long position = config->vocabulary_p[query];
     //cout << "*** " << position << " ***" << endl;
 
     if(position > 0) {
@@ -24,21 +24,23 @@
         index.seekg(position-1);
         if(index.good()) {
           index.read(reinterpret_cast<char *>(&id_term), sizeof(id_term));
-          cout << id_term << endl;
+          is.id_term = (unsigned int)abs(id_term);
+          //cout << id_term << endl;
           while(index.good()) {
-            ++count;
             index.read(reinterpret_cast<char *>(&doc_number), sizeof(doc_number));
+            is.occurrences.push_back(doc_number);
             if(doc_number > 0) {
               index.read(reinterpret_cast<char *>(&frequence), sizeof(frequence));
-              cout << doc_number << "," << frequence << "[";
+              is.frequence += frequence;
+              //cout << doc_number << "," << frequence << "[";
               for (int i = 0; i < frequence; ++i) {
                 index.read(reinterpret_cast<char *>(&occurrence), sizeof(occurrence));
-                if (i == frequence-1)
+                /*if (i == frequence-1)
                   cout << occurrence;
                 else
-                  cout << occurrence << ",";
+                  cout << occurrence << ",";*/
               }
-              cout << "]" << endl;
+              //cout << "]" << endl;
             } else {
               break;
             }
@@ -46,9 +48,8 @@
         }
         index.close();
       }
-    } else {
-      cout << "Not found" << endl;
     }
+    return is;
   }
 
   void SearchUtil::load_vocabulary() {
@@ -57,6 +58,7 @@
     stringstream filename;
     filename << config->VOCABULARY_DIRECTORY << config->VOCABULARY_FILENAME;
     ifstream voc(filename.str(), ios::in);
+    cout << filename.str() << endl;
 
     if(voc.is_open()) {
       string word;
@@ -65,11 +67,7 @@
       while (voc >> word >> key)
         config->vocabulary_p[word] = key;
       voc.close();
-      /*for (auto i = config->vocabulary_p.begin(); i != config->vocabulary_p.end(); ++i)
+     /* for (auto i = config->vocabulary_p.begin(); i != config->vocabulary_p.end(); ++i)
         cout << i->first << ", " << i->second << endl;*/
     }
-  }
-
-  void SearchUtil::find(const string& word) {
-    Configs* config = Configs::createInstance();
   }

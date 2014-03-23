@@ -1,6 +1,6 @@
 #include "StringUtil.h"
 
-string normalize(string str) {
+string normalize(string& str) {
   unsigned char c;
   string normalized = string();
   for(auto i = 0; i < str.length(); i++) {

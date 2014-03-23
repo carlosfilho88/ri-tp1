@@ -24,6 +24,7 @@ class RunUtil {
     RunUtil();
     void merge();
     int get_runs(string& path, vector<string>& files);
+    void write_vocabulary();
 
 };
 

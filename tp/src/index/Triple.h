@@ -3,6 +3,9 @@
 #include <algorithm>
 #include <unordered_map>
 #include <string>
+#include <vector>
+
+using namespace std;
 
   struct Inverted {
     unsigned int id_term;
@@ -21,10 +24,10 @@
     };
   };
 
-  struct InvertedIndex {
-    unsigned int doc_number;
+  struct IndexSearch {
+    unsigned int id_term;
     unsigned int frequence;
-    unsigned int occurrence;
+    vector<unsigned int> occurrences;
   };
 
   typedef struct RUN {

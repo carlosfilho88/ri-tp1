@@ -24,9 +24,9 @@ void ParserUtil::read_collection() {
 
   int num_terms = 0;
 
-  double tstart, tstop, ttime;
+  float tstart, tstop, ttime;
   while (cr->getNextDocument(doc)) {
-    tstart = (double)clock();
+    tstart = (float)clock();
 
     content = doc.getText();
     begin = content.find('<');
@@ -37,6 +37,7 @@ void ParserUtil::read_collection() {
       content = extract_text_html((GumboNode*)output->root);
       if(content.size() > 0) {
         content = normalize_text(content);
+        content = normalize(content);
         
         if(content.size() > 0) {
           terms = extract_terms(content);
@@ -79,8 +80,8 @@ void ParserUtil::read_collection() {
       gumbo_destroy_output(&kGumboDefaultOptions, output);
     }
 
-    tstop = (double)clock();
-    ttime += (double)(tstop-tstart)/CLOCKS_PER_SEC;
+    tstop = (float)clock();
+    ttime += (float)(tstop-tstart)/CLOCKS_PER_SEC;
 
     if(doc_num % 1000 == 0) {
       cout << doc_num << ";" << doc_indexed << ";" << config->vocabulary.size() << ";" << ttime << endl;
@@ -90,8 +91,12 @@ void ParserUtil::read_collection() {
     //cin >> ch;
   }
   write_run();
-  write_vocabulary();
-  cout << doc_num << ";" << doc_indexed << ";" << config->vocabulary.size() << ";" << num_terms << endl;
+  cout << "******************************" << endl 
+       << "Num docs: " << doc_num << endl
+       << "Indexed docs: " << doc_indexed << endl
+       << "Vocabulary size: " << config->vocabulary.size() << endl
+       << "Num terms: " << num_terms << endl
+       << "******************************" << endl;
 }
 
 /*void ParserUtil::extract_words(const string& str) {
@@ -120,7 +125,7 @@ string ParserUtil::normalize_text(const string& str) {
     string result("");
     UnicodeString source = UnicodeString::fromUTF8(str);
     UErrorCode status = U_ZERO_ERROR;
-    Transliterator *accentsConverter = Transliterator::createInstance("Lower; NFD; Latin-ASCII; [\u0301] remove; NFC;", UTRANS_FORWARD, status);
+    Transliterator *accentsConverter = Transliterator::createInstance("Lower; NFD; Any-Latin; Latin-ASCII; [\u0301] remove; NFC;", UTRANS_FORWARD, status);
     accentsConverter->transliterate(source);
     source.toUTF8String(result);
 
@@ -189,12 +194,12 @@ vector<string> ParserUtil::extract_terms(string& str) {
   vector<string> terms;
   char * dup = strdup(str.c_str());
   char * word;
-  word = strtok(dup," ´`·,.!?():\"'@#$&*;|\\^~}{[]<>¹²³³£¢¬+_-=/%\n\r\t\b");
+  word = strtok(dup," ´`·,.!?():\"'@#$&*;|\\^~}{[]<>¹²³£¢¬+_-=/%\n\r\t\b");
   //if(word != NULL)
   //  terms.push_back(word);
   while (word != NULL) {
     terms.push_back(word);
-    word = strtok(NULL, " ´`·,.!?():\"'@#$&*;|\\^~}{[]<>¹²³³£¢¬+_-=/%\n\r\t\b");
+    word = strtok(NULL, " ´`·,.!?():\"'@#$&*;|\\^~}{[]<>¹²³£¢¬+_-=/%\n\r\t\b");
   }
   free(word);
   free(dup);
@@ -232,18 +237,5 @@ void ParserUtil::write_run() {
 void ParserUtil::flush() {
   if(buffer.size() >= buffer.capacity())
     write_run();
-} 
-
-void ParserUtil::write_vocabulary() {
-  Configs* config = Configs::createInstance();
-  stringstream filename;
-  filename << config->VOCABULARY_DIRECTORY << config->VOCABULARY_FILENAME;
-
-  ofstream file(filename.str(), ofstream::out);
-  if(file.is_open()) {
-    for(auto i = config->vocabulary_p.begin(); i != config->vocabulary_p.end(); ++i)
-      file << i->first << "\t" << i->second << endl;
-    file.close();
-    
-  }
 }
+

@@ -19,6 +19,8 @@
     int current_term = -1;
     int current_doc = -1;
     unsigned long current_position = 0;
+    float tstart, tstop, ttime;
+    tstart = (float)clock();
 
     if(get_runs(config->RUN_DIRECTORY, files) == 0) {
 
@@ -82,8 +84,11 @@
       
       for (auto i = config->vocabulary.begin(); i != config->vocabulary.end(); ++i)
         config->vocabulary_p[i->first] = offset[i->second];
-
     }
+    tstop = (float)clock();
+    ttime = (float)(tstop-tstart)/CLOCKS_PER_SEC;
+    cout << endl << "*** MERGE time: " << ttime << " second(s)" << "***" << endl;
+    write_vocabulary();
     fclose(index_file);
   } 
 
@@ -99,4 +104,19 @@
     }
     closedir(dp);
     return 0;
+  }
+
+  void RunUtil::write_vocabulary() {
+    Configs* config = Configs::createInstance();
+    stringstream filename;
+    filename << config->VOCABULARY_DIRECTORY << config->VOCABULARY_FILENAME;
+
+    ofstream file(filename.str(), ofstream::out);
+    if(file.is_open()) {
+      for(auto i = config->vocabulary_p.begin(); i != config->vocabulary_p.end(); ++i)
+        file << i->first << "\t" << i->second << endl;
+      file.close();
+    }
+    config->vocabulary.clear();
+    config->vocabulary_p.clear();
   }

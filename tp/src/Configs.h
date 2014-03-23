@@ -43,7 +43,7 @@ class Configs {
 
     void read_params(int argc, char** argv) {
       mkdir("/tmp/runs", 0755);
-      run_size = RUN_SIZE*100;
+      run_size = RUN_SIZE*1024*1024;
       RUN_NUM = 0;
 
       for(unsigned int i = 0; i < argc; ++i){
@@ -93,11 +93,11 @@ class Configs {
       Configs() : FILENAME(""), 
                   RUN_FILETYPE(".run"), 
                   RUN_DIRECTORY("/tmp/runs/"), 
-                  VOCABULARY_DIRECTORY("/media/files/"), 
+                  VOCABULARY_DIRECTORY("/home/cf/workspace/ri/tp/files/"), 
                   VOCABULARY_FILENAME("vocabulary.bin"), 
-                  INDEX_OUTPUT_DIRECTORY("/media/files/"), 
+                  INDEX_OUTPUT_DIRECTORY("/home/cf/workspace/ri/tp/files/"), 
                   INDEX_OUTPUT_FILENAME("inverted_index.bin"), 
-                  INPUT_DIRECTORY("/media/files"), 
+                  INPUT_DIRECTORY("/home/cf/workspace/ri/tp/files"), 
                   INPUT_FILENAME("index.txt") {}
 
     static Configs* config;

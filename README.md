@@ -42,5 +42,6 @@ You can set these follow parameters to configure environment:
 ## Running an example
 ```bash
 cd build/src/
-./run -rd ../../files/ -if indexToCompressedColection.txt -rs 512
+./index -rd ../../files/ -if indexToCompressedColection.txt -rs 512
+./search -vd /home/user/files
 ```
